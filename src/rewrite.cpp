@@ -13,52 +13,26 @@
 
 using namespace std;
 
-class FileHandle{
-    public:
-        string file_in_name;
-        string file_out_name;
-        string file_in_psf_name;
-        string files_path = "files\\";
-        string testing_files[3] = {
-            "BARAKA_A_CHARINTRO_ScriptAssets.XXX",
-            "GEARASSETS_KIT_ScriptAssets.XXX",
-            "Init.XXX"
-        };
-
-    FileHandle(string fname)
-    {
-        set(fname);
-    }
-
-    void set(string fname)
-    {
-        file_in_name = fname;
-        file_in_psf_name = fname.substr(0, fname.length()-4) + ".psf";
-    }
-
-    void print()
-    {
-        cout<<"File Name: "<<file_in_name<<endl;
-        cout<<"PSF File Name: "<<file_in_psf_name<<endl;
-    }
-
-    string get_file_path(string fname)
-    {
-        return (files_path + fname);
-    }
-
-};
-
-
 int main(int argv, const char* argc[])
 {
+    if (argv < 2)
+    {
+        cerr<<"Usage: "<<endl<<"\t"<<argc[0]<<" FileName.XXX"<<endl;
+        return 1;
+    }
     MK11File mk11_obj = MK11File();
-    FileHandle file("Init.xxx");
-    string file_name = file.testing_files[1];
+    if (argv > 2 && argc[2] == "1")
+    {
+        mk11_obj.load_psf = false;
+    }
+    FileHandle file(argc[1]);
+    mk11_obj.register_file(file);
+    string file_name = mk11_obj.input_file_obj->get_file_path(argc[1]);
+    
+    cout<<file<<endl;
+    cerr<<file<<endl;
 
-    cout<<file.get_file_path(file_name).c_str()<<endl;
-
-    ifstream fin(file.get_file_path(file_name).c_str(), ios::binary);
+    ifstream fin(file_name.c_str(), ios::binary);
     fin>>noskipws;
 
 
@@ -95,6 +69,15 @@ int main(int argv, const char* argc[])
             for (uint32_t j = 0; j < mk11_obj.packages_extra[i].info.number_of_subpackages; j++)
             {
                 cout<<mk11_obj.packages_extra[i].subpackages[j]<<endl;
+                if (mk11_obj.get_psf_status()) // PSF Load Failed, verify.
+                {
+                    cout<<mk11_obj.packages_extra[i].subpackages[j].segment<<endl;
+                    for (uint32_t k = 0; k < mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments_count; k++)
+                    {
+                        cout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k]<<endl;
+                    }
+                }
+
             }
                 
         }

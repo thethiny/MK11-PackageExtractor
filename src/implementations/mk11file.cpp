@@ -28,7 +28,7 @@ void MK11File::read(std::ifstream& fin)
     read_footing(fin);
     read_extra_tables(fin);
     read_compressed_segments(fin);
-    //read_compressed_segments_extra();
+    read_compressed_segments_extra();
 
 }
 
@@ -94,11 +94,23 @@ void MK11File::read_compressed_segments(std::ifstream& fin)
 void MK11File::read_compressed_segments_extra()
 {
     std::string psf_file_name; // Not Implemented Yet
-    for (uint32_t i = 0; i < info.number_of_packages; i++)
+    psf_file_name = input_file_obj->get_file_path(input_file_obj->file_in_psf_name);
+
+    std::ifstream fin(psf_file_name.c_str(), std::ios::binary);
+
+    if (!fin)
     {
-        for (uint32_t j = 0; j < packages[i].info.number_of_subpackages; j++)
+        std::cerr<<"PSF file couldn't be opened. Skipping.";
+        return;
+    }
+    fin>>std::noskipws;
+    set_psf_status(true);
+
+    for (uint32_t i = 0; i < number_of_extra_packages; i++)
+    {
+        for (uint32_t j = 0; j < packages_extra[i].info.number_of_subpackages; j++)
         {
-            packages[i].subpackages[j].read_extra_info(psf_file_name);
+            packages_extra[i].subpackages[j].read_info(fin);
         }
     }
 }

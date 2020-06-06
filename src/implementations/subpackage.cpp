@@ -15,13 +15,11 @@ void SubPackage::read_info(std::ifstream& fin)
     segment.read(fin);
 }
 
-void SubPackage::read_extra_info(std::string psf_fname)
-{
-    // Should be same as above function fin changes
-    std::ifstream fin(psf_fname.c_str(), std::ios::binary);
-    fin>>std::noskipws;
-    read_info(fin);
-}
+// void SubPackage::read_extra_info(std::ifstream& fin)
+// {
+//     // Should be same as above function fin changes
+//     read_info(fin);
+// }
 
 std::ostream &operator<<(std::ostream& cout, SubPackage obj)
 {

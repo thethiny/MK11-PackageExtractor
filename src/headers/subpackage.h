@@ -17,7 +17,7 @@ class SubPackage{
 
         void read(std::ifstream&);
         void read_info(std::ifstream&);
-        void read_extra_info(std::string); // Read info for extra packages, requires psf file name
+        //void read_extra_info(std::ifstream&); // Read info for extra packages, requires psf file name
         friend std::ostream &operator<<(std::ostream&, SubPackage);
 };
 

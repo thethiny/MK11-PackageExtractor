@@ -12,7 +12,8 @@ std::ostream& operator<<(std::ostream& cout, CompressedSegment obj)
 {
     cout<<"\t\tCompressed Segment #"<<obj.id<<": "<<std::endl;
     cout<<"\t\t\tCompressed Size: "<<obj.info.compressed_segment_compressed_size<<std::endl;
-    cout<<"\t\t\tDecompressed Size: "<<obj.info.compressed_segment_decompressed_size;
+    cout<<"\t\t\tDecompressed Size: "<<obj.info.compressed_segment_decompressed_size<<std::endl;
+    cout<<"\t\t\tData Location: "<<obj.data_location;
 
     return cout;
 }

@@ -2,6 +2,7 @@
 #define MK11HEADER_H
 
 #include "package.h"
+#include "filehandle.h"
 
 class MK11File{
     private:
@@ -32,9 +33,14 @@ class MK11File{
 
         uint32_t number_of_extra_packages;
         char* internal_file_name;
+        bool has_psf;
+        bool load_psf = true;
 
         Package* packages;
         Package* packages_extra;
+
+        FileHandle* input_file_obj;
+
 
         void read(std::ifstream&);
         void read_footing(std::ifstream&);
@@ -43,6 +49,9 @@ class MK11File{
         void read_packages_extra(std::ifstream&);
         void read_compressed_segments(std::ifstream&);
         void read_compressed_segments_extra();
+        void register_file(FileHandle& file) {input_file_obj = &file;}
+        void set_psf_status(bool status) {has_psf = status && number_of_extra_packages && load_psf;}
+        bool get_psf_status() {return has_psf;}
         void print();
         friend std::ostream &operator<<(std::ostream&, MK11File);
 

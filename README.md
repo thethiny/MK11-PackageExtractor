@@ -88,3 +88,40 @@ Repeat Package for each additional Package
 File Name
 
 Until Package 0 Start Offset contains some data that is yet to be understood. However 0x20 after the name seems to be a counter*2 of some sort.
+
+
+
+# Todo
+
+- [ ] XXX File Header
+  - [x] Reading
+  - [ ] Understanding
+- [ ] XXX File Packages
+  - [x] Reading
+  - [x] Understanding
+- [ ] XXX File SubPackages
+  - [x] Reading
+  - [x] Understanding
+- [ ] XXX File Oodle Segments
+  - [x] Reading
+  - [x] Understanding
+  - [ ] Extracting
+- [ ] PSF Files
+  - [x] Reading
+  - [x] Understanding
+  - [ ] Extracting
+- [ ] XXX File Footer
+  - [x] Reading
+  - [x] Understanding
+- [ ] XXX File Footer Extra Info
+  - [ ] Reading PSF Table
+  - [ ] Understanding PSF Table
+  - [ ] Reading XXX Table
+  - [ ] Understanding XXX Table
+- [ ] HeaderData Package of XXX File
+  - [ ] Understanding
+  - [ ] Mapping Name/Import/Export Tables
+- [ ] Extra
+  - [x] Add flag to skip PSF
+  - [x] Allow file input via cli
+  - [ ] Change file input to load by location not by folder "Files"
