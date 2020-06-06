@@ -37,3 +37,4 @@ files
 
 # Files
 test.cpp
+*.txt
