@@ -21,14 +21,14 @@ int main(int argv, const char* argc[])
         return 1;
     }
     MK11File mk11_obj = MK11File();
-    if (argv > 2 && argc[2] == "1")
+    if (argv > 2 && argc[2] == "0")
     {
         mk11_obj.load_psf = false;
     }
     FileHandle file(argc[1]);
     mk11_obj.register_file(file);
     string file_name = mk11_obj.input_file_obj->get_file_path(argc[1]);
-    
+
     cout<<file<<endl;
     cerr<<file<<endl;
 
@@ -69,7 +69,7 @@ int main(int argv, const char* argc[])
             for (uint32_t j = 0; j < mk11_obj.packages_extra[i].info.number_of_subpackages; j++)
             {
                 cout<<mk11_obj.packages_extra[i].subpackages[j]<<endl;
-                if (mk11_obj.get_psf_status()) // PSF Load Failed, verify.
+                if (mk11_obj.get_psf_status())
                 {
                     cout<<mk11_obj.packages_extra[i].subpackages[j].segment<<endl;
                     for (uint32_t k = 0; k < mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments_count; k++)

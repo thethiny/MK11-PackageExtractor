@@ -15,12 +15,6 @@ void SubPackage::read_info(std::ifstream& fin)
     segment.read(fin);
 }
 
-// void SubPackage::read_extra_info(std::ifstream& fin)
-// {
-//     // Should be same as above function fin changes
-//     read_info(fin);
-// }
-
 std::ostream &operator<<(std::ostream& cout, SubPackage obj)
 {
     cout<<"\tSubPackage #"<<obj.id<<":"<<std::endl;
