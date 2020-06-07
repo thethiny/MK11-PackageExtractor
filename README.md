@@ -100,7 +100,7 @@ While Total Segment Size (compressed/decompressed) not fulfilled:
 
 Repeat for number of Compressed Segments
 
-After all segments done, repeat from [Segments](#segment-anchor) until file is done.
+After all segments done, repeat from [Segments](#segments) until file is done.
 
 
 
