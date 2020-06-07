@@ -137,3 +137,12 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Add flag to skip PSF
   - [x] Allow file input via cli
   - [x] Change file input to load by location not by folder "Files"
+
+
+# How to build
+
+You need GCC Compiler because I'm using [`__attribute__((packed))`](http://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1359124982232.htm#:~:text=__attribute__((packed))%20variable%20attribute,-Home%20%C2%BB%20armclang%20Reference&text=You%20can%20specify%20the%20packed,has%20the%20smallest%20possible%20alignment.).
+
+For Visual Code, download the C++ Intellisense extension and add a build task to your config to automatically include all the includes and all the local files to match them together. Also add src/headers to your include dir as well as the standard libraries to your `.vscode/c_cpp_properties.json` if you want to edit in Visual Code for linking.
+
+_See reference [`.vscode/tasks.json`](/blob/master/.vscode/tasks.json) for example._

@@ -32,7 +32,8 @@
 *.app
 
 # Folders
-.vscode
+.vscode/*
+!.vscode/tasks.json
 files
 
 # Files
