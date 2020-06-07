@@ -145,4 +145,4 @@ You need GCC Compiler because I'm using [`__attribute__((packed))`](http://www.k
 
 For Visual Code, download the C++ Intellisense extension and add a build task to your config to automatically include all the includes and all the local files to match them together. Also add src/headers to your include dir as well as the standard libraries to your `.vscode/c_cpp_properties.json` if you want to edit in Visual Code for linking.
 
-_See reference [`.vscode/tasks.json`](/blob/master/.vscode/tasks.json) for example._
+_See reference [`.vscode/tasks.json`](/.vscode/tasks.json) for example._
