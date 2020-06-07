@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
+#include "utils.h"
 
 class CompressedSegment{
     public:
@@ -17,6 +18,9 @@ class CompressedSegment{
 
         void read(std::ifstream&);
         friend std::ostream& operator<<(std::ostream&, CompressedSegment);
+        friend std::ofstream& operator<<(std::ofstream&, CompressedSegment);
+        void read_data(std::ifstream&);
+        void delete_data() {delete [] data;}
 };
 
 #endif

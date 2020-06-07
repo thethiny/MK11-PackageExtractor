@@ -25,26 +25,41 @@ int main(int argv, const char* argc[])
     {
         mk11_obj.load_psf = false;
     }
-    FileHandle file(argc[1]);
-    mk11_obj.register_file(file);
-    string file_name = mk11_obj.input_file_obj->get_file_path(argc[1]);
 
-    cout<<file<<endl;
-    cerr<<file<<endl;
+    FileHandle file;
 
-    ifstream fin(file_name.c_str(), ios::binary);
-    fin>>noskipws;
-
-
-    if (!fin.good())
+    try
     {
-        cerr<<"Couldn't open file";
+        file.set(argc[1]);
+        file.open_files();
+    }
+    catch (string error_string)
+    {
+        cerr<<"Couldn't open file "<<argc[1]<<".";
         return -1;
     }
+    catch (...)
+    {
+        exception_ptr p = current_exception();
+        try
+        {
+            rethrow_exception(p);
+        }
+        catch (const exception& e)
+        {
+            cerr<<e.what()<<endl;
+        }
+        return -2;
+    }
+
+    mk11_obj.register_file(file); //Change this so you open file in FileHandle
+
+    cout<<file<<endl<<endl;
+    cerr<<file<<endl;
     
     try
     {
-        mk11_obj.read(fin);
+        mk11_obj.read(mk11_obj.input_file_obj->file_in);
         cout<<mk11_obj<<endl;
         cout<<endl;
         for (uint32_t i = 0; i < mk11_obj.info.number_of_packages; i++)

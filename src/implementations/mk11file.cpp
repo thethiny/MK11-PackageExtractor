@@ -6,7 +6,7 @@ void MK11File::read(std::ifstream& fin)
     char* read_array;
 
     read_array = new char [read_size];
-    fin.read(read_array, read_size);
+    fin.read(read_array, read_size);    
 
     memcpy(&info, read_array, sizeof(info));
 
@@ -93,24 +93,18 @@ void MK11File::read_compressed_segments(std::ifstream& fin)
 
 void MK11File::read_compressed_segments_extra()
 {
-    std::string psf_file_name; // Not Implemented Yet
-    psf_file_name = input_file_obj->get_file_path(input_file_obj->file_in_psf_name);
-
-    std::ifstream fin(psf_file_name.c_str(), std::ios::binary);
-
-    if (!fin)
+    if (!input_file_obj->file_in_psf)
     {
         std::cerr<<"PSF file couldn't be opened. Skipping.";
         return;
     }
-    fin>>std::noskipws;
     set_psf_status(true);
 
     for (uint32_t i = 0; i < number_of_extra_packages; i++)
     {
         for (uint32_t j = 0; j < packages_extra[i].info.number_of_subpackages; j++)
         {
-            packages_extra[i].subpackages[j].read_info(fin);
+            packages_extra[i].subpackages[j].read_info(input_file_obj->file_in_psf);
         }
     }
 }

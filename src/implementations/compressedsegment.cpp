@@ -8,6 +8,13 @@ void CompressedSegment::read(std::ifstream& fin)
     memcpy(&info, read_array, read_size);
 }
 
+void CompressedSegment::read_data(std::ifstream& fin)
+{
+    fin.seekg(data_location);
+    data = new char [info.compressed_segment_compressed_size];
+    fin.read(data, info.compressed_segment_compressed_size);
+}
+
 std::ostream& operator<<(std::ostream& cout, CompressedSegment obj)
 {
     cout<<"\t\tCompressed Segment #"<<obj.id<<": "<<std::endl;
@@ -16,4 +23,16 @@ std::ostream& operator<<(std::ostream& cout, CompressedSegment obj)
     cout<<"\t\t\tData Location: "<<obj.data_location;
 
     return cout;
+}
+
+std::ofstream& operator<<(std::ofstream& fout, CompressedSegment obj)
+{
+    uint8_t* dec_size_arr = new uint8_t [8];
+    btoa(dec_size_arr, obj.info.compressed_segment_decompressed_size, 8);
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        fout<<dec_size_arr[i];
+    }
+
+    return fout;
 }

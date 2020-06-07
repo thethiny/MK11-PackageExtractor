@@ -41,7 +41,6 @@ class MK11File{
 
         FileHandle* input_file_obj;
 
-
         void read(std::ifstream&);
         void read_footing(std::ifstream&);
         void read_extra_tables(std::ifstream&);

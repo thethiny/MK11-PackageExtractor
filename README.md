@@ -4,27 +4,21 @@ This is an application meant to extract the MK11 Package (.XXX &amp; .PSF) files
 # Info on XXX files:
 
 The .xxx package is a modified UE4 package that looks as follows:
+
 ## Header
 
-4 Bytes Magic: C1 83 2A 9E
-
-2 Bytes Version: 01 03 as of June 2020
-
-2 Bytes Another Version: 9D 00 as of June 2020
-
-4 Unk
-
-4 Unk
-
-4 Engine Version: E7 01 as of June 2020
-
-4 Game Identifier: "MK11"
-
-4? Another Version: 50 as of June 2020
-
-4 UNK
-
-4 "MAIN"
+| Name               | Size |    Value    |
+|--------------------|:----:|:-----------:|
+| Magic              |   4  | C1 83 2A 9E |
+| Engine Version 1/2 |   2  |    01 03    |
+| Engine Version 2/2 |   2  |    9D 00    |
+| Unknown            |   4  |             |
+| Unknown            |   4  |             |
+| Script Version     |   4  | E7 01 00 00 |
+| Game Identifier    |   4  |    "MK11"   |
+| ? Version          |   4  | 50 00 00 00 |
+| Unknown            |   4  |             |
+| Main Package       |   4  |    "MAIN"   |
 
 Uknown until 0x68
 
@@ -34,31 +28,26 @@ Uknown until 0x68
 
 For each Package in Package Count
 
-4 Package Name Length
-
-Package Name
-
-8 Uknown
-
-8 Total Decompressed Package Size
-
-8 Package Start Location
-
-8 Package Size
-
-4 Sub Packages Count
+| Name                                   |         Size        |  Value |
+|----------------------------------------|:-------------------:|:------:|
+| Package Name Length                    |          4          |        |
+| Package Name                           | Package Name Length | String |
+| Unknown                                |          8          |        |
+| Package Decompressed Buffer Total Size |          8          |        |
+| Package Location                       |          8          |        |
+| Package Size                           |          8          |        |
+| SubPackages Count                      |          4          |        |
 
 ## Sub Packages
 
 For each Sub Package in Sub Packages Count
 
-8 Unknown
-
-8 Decompressed Sub Package size
-
-8 Sub Package Start Location
-
-8 Sub Package Size
+| Name                         | Size | Value |
+|------------------------------|:----:|:-----:|
+| Unknown                      |   8  |       |
+| Decompressed SubPackage Size |   8  |       |
+| SubPackage Start Location    |   8  |       |
+| SubPackage Size              |   8  |       |
 
 then jump to the start location and you enter the Segments.
 
@@ -75,17 +64,23 @@ then jump to compressed segment
 
 ## After all Packages are done
 
-4 Additional Packages Count
+| Name                         | Size | Value |
+|------------------------------|:----:|:-----:|
+| PSF Packages Count           |   4  |       |
 
 Repeat Package for each additional Package
 
 ## After all additional Packages
 
-0x18 Padding (00)
-
-4 File Name
-
-File Name
+| Name                    |                  Size                 |  Value |
+|-------------------------|:-------------------------------------:|:------:|
+| Padding                 |                  0x18                 |   00   |
+| File Name Length        |                   4                   |        |
+| File Name               |            File Name Length           | String |
+| Unknown PSF Table Count |                   4                   |        |
+| PSF Table               | Unknown PSF Table Count * unk formula |        |
+| Unknown Table Count     | 4                                     |        |
+| Unknown Table           | Unknown Table Count * unk formula     |        |
 
 Until Package 0 Start Offset contains some data that is yet to be understood. However 0x20 after the name seems to be a counter*2 of some sort.
 
