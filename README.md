@@ -73,8 +73,7 @@ Until Package 0 Start Offset contains some data that is yet to be understood. Ho
 
 Then jump to the start location and you enter the Segments.
 
-## Segments {#segment-anchor}
-
+## Segments
 | Name                            | Size | Value       |
 |---------------------------------|:----:|:-----------:|
 | Magic                           | 4    | C1 83 2A 9E |
