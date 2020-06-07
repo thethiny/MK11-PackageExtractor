@@ -33,14 +33,19 @@ std::string FileHandle::get_base_dir(std::string file_name)
 {
     std::string file_no_ext = "";
     uint16_t index = 0;
+    bool f = false;
     for (uint16_t i = 0; i < file_name.length(); i++)
     {
         if (file_name[i] == '\\')
         {
             index = i;
+            f = true;
         }
     }
-    file_no_ext = file_name.substr(index+1, file_name.length());
+    if (f)
+        file_no_ext = file_name.substr(index+1, file_name.length());
+    else
+        file_no_ext = file_name;
 
     return file_no_ext;
 }
@@ -50,14 +55,18 @@ std::string FileHandle::get_name_no_extension(std::string file_name)
     std::string base_name = "";
 
     uint16_t index = 0;
+    bool f = false;
     for (uint16_t i = 0; i < file_name.length(); i++)
     {
         if (file_name[i] == '.')
         {
             index = i;
+            f = true;
         }
     }
-    base_name = file_name.substr(0, index);
+    if (f)
+        base_name = file_name.substr(0, index);
+    else base_name = file_name;
 
     return base_name;
 }

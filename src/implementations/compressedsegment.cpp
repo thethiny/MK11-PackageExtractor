@@ -34,5 +34,10 @@ std::ofstream& operator<<(std::ofstream& fout, CompressedSegment obj)
         fout<<dec_size_arr[i];
     }
 
+    for (uint64_t i = 0; i < obj.info.compressed_segment_compressed_size; i++)
+    {
+        fout<<(uint8_t)(obj.data[i]);
+    }
+
     return fout;
 }

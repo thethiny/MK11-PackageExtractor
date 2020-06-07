@@ -119,4 +119,4 @@ Until Package 0 Start Offset contains some data that is yet to be understood. Ho
 - [ ] Extra
   - [x] Add flag to skip PSF
   - [x] Allow file input via cli
-  - [ ] Change file input to load by location not by folder "Files"
+  - [x] Change file input to load by location not by folder "Files"
