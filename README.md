@@ -49,19 +49,6 @@ For each Sub Package in Sub Packages Count
 | SubPackage Start Location    |   8  |       |
 | SubPackage Size              |   8  |       |
 
-then jump to the start location and you enter the Segments.
-
-## Segments
-
-[Add Segment info here]
-
-then jump to compressed segment
-
-## Compressed Segments
-
-[Add Compressed Segment info here]
-
-
 ## After all Packages are done
 
 | Name                         | Size | Value |
@@ -83,6 +70,37 @@ Repeat Package for each additional Package
 | Unknown Table           | Unknown Table Count * unk formula     |        |
 
 Until Package 0 Start Offset contains some data that is yet to be understood. However 0x20 after the name seems to be a counter*2 of some sort.
+
+Then jump to the start location and you enter the Segments.
+
+## Segments {#segment-anchor}
+
+| Name                            | Size | Value       |
+|---------------------------------|:----:|:-----------:|
+| Magic                           | 4    | C1 83 2A 9E |
+| Unknown                         | 4    |             |
+| Unknown                         | 8    |             |
+| Total Segment Compressed Size   | 8    |             |
+| Total Segment Decompressed Size | 8    |             |
+
+## Compressed Segments
+
+While Total Segment Size (compressed/decompressed) not fulfilled:
+
+| Name                      | Size | Value       |
+|---------------------------|:----:|:-----------:|
+| Segment Compressed Size   | 8    |             |
+| Segment Decompressed Size | 8    |             |
+
+## Data
+
+| Name   | Size                    | Value  |
+|--------|:-----------------------:|:------:|
+| Data   | Segment Compressed Size |        |
+
+Repeat for number of Compressed Segments
+
+After all segments done, repeat from [Segments](#segment-anchor) until file is done.
 
 
 
