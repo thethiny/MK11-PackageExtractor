@@ -93,9 +93,14 @@ void MK11File::read_compressed_segments(std::ifstream& fin)
 
 void MK11File::read_compressed_segments_extra()
 {
-    if (!input_file_obj->file_in_psf)
+    if (!number_of_extra_packages)
     {
-        std::cerr<<"PSF file couldn't be opened. Skipping.";
+        std::cerr<<"PSF File Not Required."<<std::endl;
+        return;
+    }
+    else if (!input_file_obj->file_in_psf)
+    {
+        std::cerr<<"Couldn't find required PSF File... Skipping."<<std::endl;
         return;
     }
     set_psf_status(true);

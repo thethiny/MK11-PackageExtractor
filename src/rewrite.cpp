@@ -59,12 +59,18 @@ int main(int argv, const char* argc[])
     
     try
     {
+        _mkdir(mk11_obj.input_file_obj->output_folder.c_str()); // output
         mk11_obj.read(mk11_obj.input_file_obj->file_in);
         cout<<mk11_obj<<endl;
         cout<<endl;
+        _mkdir(mk11_obj.input_file_obj->folder_out_name.c_str()); // Make Directory
         for (uint32_t i = 0; i < mk11_obj.info.number_of_packages; i++)
         {
             cout<<mk11_obj.packages[i]<<endl;
+            string folder_out = mk11_obj.input_file_obj->make_folder_out_name(i, mk11_obj.packages[i].name); // id_PackageName
+            string params[2] = {mk11_obj.input_file_obj->folder_out_name, folder_out};
+            string mk_folder_out = mk11_obj.input_file_obj->join(params, 2);
+            _mkdir(mk_folder_out.c_str()); // Make Directory
             for (uint32_t j = 0; j < mk11_obj.packages[i].info.number_of_subpackages; j++)
             {
                 cout<<mk11_obj.packages[i].subpackages[j]<<endl;
@@ -72,30 +78,61 @@ int main(int argv, const char* argc[])
                 for (uint32_t k = 0; k < mk11_obj.packages[i].subpackages[j].segment.compressed_segments_count; k++)
                 {
                     cout<<mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k]<<endl;
+                    string file_out = mk11_obj.input_file_obj->make_file_out_name(j, k); //SubpackageId_SegmentId.oodle
+                    std::string names[2] = {
+                        mk_folder_out,
+                        file_out
+                    };
+                    std::string out_f = mk11_obj.input_file_obj->join(names, 2);
+                    cerr<<"Extracting file to "<<out_f<<endl;
+                    mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.input_file_obj->file_in);
+                    ofstream fout(out_f.c_str(), ios::binary);
+                    fout<<mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k];
+                    mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k].delete_data();
                 }
             }
             
                 
         }
-        cout<<"Extra Packages: "<<endl;
-        for (uint32_t i = 0; i < mk11_obj.number_of_extra_packages; i++)
+        if (mk11_obj.number_of_extra_packages)
         {
-            cout<<mk11_obj.packages_extra[i]<<endl;
-            for (uint32_t j = 0; j < mk11_obj.packages_extra[i].info.number_of_subpackages; j++)
+            cout<<"Extra Packages: "<<endl;
+            _mkdir(mk11_obj.input_file_obj->folder_out_extra_name.c_str()); // Make Directory
+            for (uint32_t i = 0; i < mk11_obj.number_of_extra_packages; i++)
             {
-                cout<<mk11_obj.packages_extra[i].subpackages[j]<<endl;
-                if (mk11_obj.get_psf_status())
+                cout<<mk11_obj.packages_extra[i]<<endl;
+                string folder_out = mk11_obj.input_file_obj->make_folder_out_name(i, mk11_obj.packages_extra[i].name); // id_ExtraPackageName
+                string params[2] = {mk11_obj.input_file_obj->folder_out_extra_name, folder_out};
+                string mk_folder_out = mk11_obj.input_file_obj->join(params, 2);
+                _mkdir(mk_folder_out.c_str()); // Make Directory
+                for (uint32_t j = 0; j < mk11_obj.packages_extra[i].info.number_of_subpackages; j++)
                 {
-                    cout<<mk11_obj.packages_extra[i].subpackages[j].segment<<endl;
-                    for (uint32_t k = 0; k < mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments_count; k++)
+                    cout<<mk11_obj.packages_extra[i].subpackages[j]<<endl;
+                    if (mk11_obj.get_psf_status())
                     {
-                        cout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k]<<endl;
+                        cout<<mk11_obj.packages_extra[i].subpackages[j].segment<<endl;
+                        for (uint32_t k = 0; k < mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments_count; k++)
+                        {
+                            cout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k]<<endl;
+                            string file_out = mk11_obj.input_file_obj->make_file_out_name(j, k); //SubpackageId_SegmentId.oodle
+                            std::string names[2] = {
+                                mk_folder_out,
+                                file_out
+                            };
+                            std::string out_f = mk11_obj.input_file_obj->join(names, 2);
+                            cerr<<"Extracting file to "<<out_f<<endl;
+                            mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.input_file_obj->file_in_psf);
+                            ofstream fout(out_f.c_str(), ios::binary);
+                            fout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k];
+                            mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k].delete_data();
+                        }
                     }
-                }
 
+                }
+                    
             }
-                
         }
+
     }
     catch (string error_string)
     {

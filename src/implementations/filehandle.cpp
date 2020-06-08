@@ -1,5 +1,6 @@
 #include "filehandle.h"
 #include "direct.h"
+#include <sstream>
 
 FileHandle::FileHandle(std::string fname)
 {
@@ -13,6 +14,8 @@ void FileHandle::set(std::string fname)
     file_in_psf_name = get_psf_name(fname);
     std::string params[2] = {output_folder, get_base_name(fname)};
     folder_out_name = join(params, 2);
+    std::string params2[2] = {folder_out_name, extra_folder_name};
+    folder_out_extra_name = join(params2, 2);    
 }
 
 std::string FileHandle::join(std::string* names, uint64_t count)
@@ -110,7 +113,23 @@ void FileHandle::open_files()
     file_in_psf.open(file_in_psf_name, std::ios::binary);
     if (!file_in_psf)
     {
-        std::cerr<<"PSF File not present.";
+        std::cerr<<"PSF File not present."<<std::endl;
     }
     file_in_psf>>std::noskipws;
+}
+
+std::string FileHandle::make_file_out_name(uint64_t seg_id, uint64_t chunk_id)
+{
+    std::stringstream file_name("");
+    file_name<<seg_id<<"_"<<chunk_id<<extensions.compressed_file;
+
+    return file_name.str();
+}
+
+std::string FileHandle::make_folder_out_name(uint64_t pack_id, std::string pack_name)
+{
+    std::stringstream folder_name("");
+    folder_name<<pack_id<<"_"<<pack_name;
+
+    return folder_name.str();
 }

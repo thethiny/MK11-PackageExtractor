@@ -35,6 +35,7 @@
 .vscode/*
 !.vscode/tasks.json
 files
+output
 
 # Files
 test.cpp

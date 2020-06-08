@@ -31,7 +31,7 @@ class MK11File{
             uint32_t number_of_packages;
         } __attribute__((packed)) info; 
 
-        uint32_t number_of_extra_packages;
+        uint32_t number_of_extra_packages = 0;
         char* internal_file_name;
         bool has_psf;
         bool load_psf = true;
