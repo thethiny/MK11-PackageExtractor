@@ -105,38 +105,40 @@ After all segments done, repeat from [Segments](#segments) until file is done.
 
 # Todo
 
-- [ ] XXX File Header
+- XXX File Header
   - [x] Reading
   - [ ] Understanding
-- [ ] XXX File Packages
+- XXX File Packages
   - [x] Reading
   - [x] Understanding
-- [ ] XXX File SubPackages
+- XXX File SubPackages
   - [x] Reading
   - [x] Understanding
-- [ ] XXX File Oodle Segments
-  - [x] Reading
-  - [x] Understanding
-  - [x] Extracting
-- [ ] PSF Files
+- XXX File Oodle Segments
   - [x] Reading
   - [x] Understanding
   - [x] Extracting
-- [ ] XXX File Footer
+- PSF Files
   - [x] Reading
   - [x] Understanding
-- [ ] XXX File Footer Extra Info
+  - [x] Extracting
+- XXX File Footer
+  - [x] Reading
+  - [x] Understanding
+- XXX File Footer Extra Info
   - [ ] Reading PSF Table
   - [ ] Understanding PSF Table
   - [ ] Reading XXX Table
   - [ ] Understanding XXX Table
-- [ ] HeaderData Package of XXX File
+- HeaderData Package of XXX File
   - [ ] Understanding
   - [ ] Mapping Name/Import/Export Tables
-- [ ] Extra
+- Extra
   - [x] Add flag to skip PSF
   - [x] Allow file input via cli
   - [x] Change file input to load by location not by folder "Files"
+  - [ ] Generate info to enable repacking of files
+  - [ ] Extracted files should have proper names
 
 
 # How to build
