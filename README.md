@@ -8,28 +8,28 @@ The .xxx package is a modified UE4 package that looks as follows:
 ## Header
 
 | Name                                      | Size |    Value    |
-|-------------------------------------------|:----:|:-----------:|
-| Magic                                     |   4  | C1 83 2A 9E |
-| Engine Version 1/2                        |   2  |    01 03    |
-| Engine Version 2/2                        |   2  |    9D 00    |
-| Decompressed Data Start Location          |   4  |             |
-| ? Version                                 |   4  | 2E 0A 00 00 |
-| Script Version                            |   4  | E7 01 00 00 |
-| Game Identifier                           |   4  |    "MK11"   |
-| ? Version                                 |   4  | 50 00 00 00 |
-| ? Version                                 | 4    | 4B 04 00 00 |
-| Main Package                              | 4    | "MAIN"      |
-| Unknown                                   | 4    |             |
-| Name Table Entries                        |   4  |             |
-| Name Table Offset in Decompressed Data    |   8  |             |
-| Table 3 Entries                           |   4  |             |
-| Table 3 Offset in Decompressed Data       |   8  |             |
-| Table 2 Entries                           |   4  |             |
-| Table 2 Offset in Decompressed Data       |   8  |             |
-| Total Decompressed Size - _BulkData Files | 8    |             |
-| GUID                                      | 16   |             |
-| Unknown                                   | 4    |             |
-| Number of Packages                        |  4    |             |
+|-------------------------------------------|:-----:|:-----------:|
+| Magic                                     |   4   | C1 83 2A 9E |
+| Engine Version 1/2                        |   2   |    01 03    |
+| Engine Version 2/2                        |   2   |    9D 00    |
+| Decompressed Data Start Location          |   4   |             |
+| ? Version                                 |   4   | 2E 0A 00 00 |
+| Script Version                            |   4   | E7 01 00 00 |
+| Game Identifier                           |   4   |    "MK11"   |
+| ? Version                                 |   4   | 50 00 00 00 |
+| ? Version                                 |   4   | 4B 04 00 00 |
+| Main Package                              |   4   |    "MAIN"   |
+| Unknown                                   |   4   |             |
+| Name Table Entries                        |   4   |             |
+| Name Table Offset in Decompressed Data    |   8   |             |
+| Table 3 Entries                           |   4   |             |
+| Table 3 Offset in Decompressed Data       |   8   |             |
+| Table 2 Entries                           |   4   |             |
+| Table 2 Offset in Decompressed Data       |   8   |             |
+| Total Decompressed Size - _BulkData Files |   8   |             |
+| GUID                                      |   16  |             |
+| Unknown                                   |   4   |             |
+| Number of Packages                        |   4   |             |
 
 ## Packages
 

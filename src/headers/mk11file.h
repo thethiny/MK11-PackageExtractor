@@ -11,35 +11,43 @@ class MK11File{
             unsigned int magic = 0x9E2A83C1u;
             unsigned int engine_version = 0x01E7u;
             unsigned int version_3 = 0x50;
-            unsigned short version_1 = 0x0301u;
-            unsigned short version_2 = 0x9Du;
+            unsigned short file_version = 0x0301u;
+            unsigned short licensee_version = 0x9Du;
         } version_info;
         void validate_header();
 
     public:
         struct Info{
             uint32_t magic;
-            uint16_t version_1;
-            uint16_t version_2;
+            uint16_t file_version;
+            uint16_t licensee_version;
             uint32_t decompressed_start; // Location of Data in Total Decompressed Data
-            uint32_t file_version; // Maybe
+            uint32_t version_2; // Maybe
             uint32_t engine_version;
             char game_name[4];
             uint32_t version_3;
             uint32_t version_4;
             char main_package_name[4];
-            uint32_t unk1;
+            uint32_t package_flags;
             uint32_t name_table_entries;
             uint64_t decompressed_header_location; // Location of Header in the Total Decompressed Data
-            uint32_t table_2_entries;
-            uint64_t decompressed_table_2_location;
-            uint32_t table_3_entries;
-            uint64_t decompressed_table_3_location;
-            uint64_t decompressed_total_size;
+            uint32_t export_table_entries;
+            uint64_t decompressed_export_table_location;
+            uint32_t import_table_entries;
+            uint64_t decompressed_import_table_location;
+            uint64_t decompressed_total_size; // Without files that have _BulkData suffix, need to figure out how to determine bulkdata, prob flag in expTbl.
             uint8_t file_GUID[0x10];
-            uint32_t unk2;
+            uint32_t compression_flag; // Most Probably
             uint32_t number_of_packages;
         } __attribute__((packed)) info; 
+
+        enum compression_flags
+        {
+            ZLIB  = 0x0001u,
+            LZO   = 0x0002u,
+            LZX   = 0x0004u,
+            OODLE = 0x0100u
+        };
 
         uint32_t number_of_extra_packages = 0;
         char* internal_file_name;

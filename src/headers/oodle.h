@@ -2,16 +2,14 @@
 #define OODLE_H
 #include <iostream>
 #include <windows.h>
-#include <tchar.h>
+#include "compression.h"
 
-
-class Oodle{
+class Oodle: public Compression{
     public:
         std::string dll_path = "./oo2core_5_win64.dll";
         std::string compress_function_name = "OodleLZ_Compress";
         std::string decompress_function_name = "OodleLZ_Decompress";
         std::string default_compression_options_function_name = "OodleLZ_CompressOptions_GetDefault";
-        HINSTANCE dll_object;
 
         typedef int WINAPI OodleLZ_CompressFunc(
             uint32_t codec, char *src_buf, uint64_t src_len, char *dst_buf, int64_t level,
@@ -46,13 +44,12 @@ class Oodle{
         int64_t Compress(char* src_buf, uint64_t src_len, char* dst_buf);
         void Decompress(char* src_buf, int64_t src_len, char* dst_buf, uint64_t dst_len);
         
-        void load_dll();
         void resolve_functions();
         Oodle(std::string d_f)
         {
             if (d_f != "")
                 dll_path = d_f;
-            load_dll();
+            load_dll(dll_path);
         }
 
 };

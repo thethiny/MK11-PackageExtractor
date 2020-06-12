@@ -10,7 +10,9 @@
 #include "subpackage.h"
 #include "segment_info.h"
 #include "compressedsegment.h"
+#include "compression.h"
 #include "oodle.h"
+#include "zlib.h"
 
 using namespace std;
 int main(int argv, const char* argc[])
@@ -32,18 +34,7 @@ int main(int argv, const char* argc[])
     string file_in_name = arg_parse.file_name;
 
     FileHandle file;
-
-    Oodle* oodle_obj;
-
-    try
-    {
-        oodle_obj = new Oodle(oodle_folder);
-    }
-    catch (string s)
-    {
-        cerr<<"Error "<<s<<endl;
-        return 1;
-    }
+    Compression* compression_obj;
     
 
     try
@@ -81,6 +72,31 @@ int main(int argv, const char* argc[])
         mk11_obj.read(mk11_obj.input_file_obj->file_in);
         cout<<mk11_obj<<endl;
         cout<<endl;
+
+        try
+        {
+            if (mk11_obj.info.compression_flag == 0x100u)
+            {
+                compression_obj = new Oodle(oodle_folder);
+                cerr<<"Compression Type Set To Oodle"<<endl;
+            }
+                
+            else if (mk11_obj.info.compression_flag == 0x01u)
+            {
+                compression_obj = new Zlib("./zlib1.dll");
+                cerr<<"Compression Type Set To Zlib"<<endl;
+            }
+            else {
+                cerr<<"Unsupported Compression!";
+                return -1;
+            }
+        }
+        catch (string s)
+        {
+            cerr<<"Error "<<s<<endl;
+            return 1;
+        }
+
         _mkdir(mk11_obj.input_file_obj->folder_out_name.c_str()); // Make Directory
         for (uint32_t i = 0; i < mk11_obj.info.number_of_packages; i++)
         {
@@ -128,7 +144,7 @@ int main(int argv, const char* argc[])
                     // ofstream fout_dec(out_f_dec.c_str(), ios::binary);
                     
                     char *out_data = new char [c_seg->info.compressed_segment_decompressed_size];
-                    oodle_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
+                    compression_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
                     c_seg->info.compressed_segment_decompressed_size);
                     // cerr<<"Decompressed"<<endl;
 
@@ -145,7 +161,7 @@ int main(int argv, const char* argc[])
                     // std::string out_f_enc = mk11_obj.input_file_obj->join(names, 2) + string(".dec.oodl");
                     // char* cmp_data = new char [c_seg->info.compressed_segment_decompressed_size + 0x10000];
                     // ofstream fout_enc(out_f_enc.c_str(), ios::binary);
-                    // int64_t out_size = oodle_obj->Compress(out_data, c_seg->info.compressed_segment_decompressed_size, cmp_data);
+                    // int64_t out_size = compression_obj->Compress(out_data, c_seg->info.compressed_segment_decompressed_size, cmp_data);
                     // uint8_t* size_array = new uint8_t[8];
                     // btoa(size_array, c_seg->info.compressed_segment_decompressed_size, 8);
                     // for (uint64_t d = 0; d < 8; d++)
@@ -219,7 +235,7 @@ int main(int argv, const char* argc[])
                         ofstream fout_dec(out_f_dec.c_str(), ios::binary);
                         
                         char *out_data = new char [c_seg->info.compressed_segment_decompressed_size];
-                        oodle_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
+                        compression_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
                         c_seg->info.compressed_segment_decompressed_size);
                         // cerr<<"Decompressed"<<endl;
 

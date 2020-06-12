@@ -1,18 +1,4 @@
 #include "oodle.h"
-#include<fstream>
-
-void Oodle::load_dll()
-{
-    dll_object = LoadLibraryA(dll_path.c_str());
-
-    if (!dll_object)
-    {
-        throw std::string("Failed to load Oodle dll ") + dll_path;
-    }
-
-    resolve_functions();
-    std::cerr<<dll_path<<" Loaded Successfully."<<std::endl;
-}
 
 void Oodle::resolve_functions()
 {

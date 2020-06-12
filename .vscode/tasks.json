@@ -35,7 +35,9 @@
 				"MK11PackageExtractor.exe",
 				"-std=c++11",
 				"-I",
-				"${workspaceFolder}/src/headers"
+				"${workspaceFolder}/src/headers",
+				"-static-libgcc",
+				"-static-libstdc++"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

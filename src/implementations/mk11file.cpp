@@ -125,18 +125,18 @@ void MK11File::validate_header()
     {
         throw std::string("Engine Version Mismatch");
     }
-    if (info.version_1 != version_info.version_1)
+    if (info.file_version != version_info.file_version)
     {
-        throw std::string("Version 1 Mismatch");
+        throw std::string("File Version Mismatch");
     }
-    if (info.version_2 != version_info.version_2)
+    if (info.licensee_version != version_info.licensee_version)
     {
-        throw std::string("Version 2 Mismatch");
+        throw std::string("Licensee Mismatch");
     }
-    if (info.version_3 != version_info.version_3)
-    {
-        throw std::string("Version 3 Mismatch");
-    }
+    // if (info.version_3 != version_info.version_3)
+    // {
+    //     throw std::string("Version 3 Mismatch");
+    // }
 }
 
 void MK11File::print()
@@ -148,22 +148,22 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
 {
     cout<<"File Info: "<<std::endl;
     cout<<"\tMagic: "<<std::hex<<obj.info.magic<<std::endl;
-    cout<<"\tVersion: "<<std::hex<<obj.info.version_1<<"/"<<obj.info.version_2<<std::endl;
+    cout<<"\tVersion (file/licensee): "<<std::hex<<obj.info.file_version<<"/"<<obj.info.licensee_version<<std::endl;
     cout<<"\tDecompressed Data Start Location: "<<std::hex<<obj.info.decompressed_start<<std::endl;
-    cout<<"\tVersion UNK1: "<<std::hex<<obj.info.file_version<<std::endl;
+    cout<<"\tVersion UNK1: "<<std::hex<<obj.info.version_2<<std::endl;
     cout<<"\tEngine Version: "<<std::hex<<obj.info.engine_version<<std::endl;
     cout<<"\tGame: "<<std::hex<<obj.info.game_name<<std::endl;
     cout<<"\tVersion UNK2: "<<std::hex<<obj.info.version_3<<std::endl;
     cout<<"\tVersion UNK3: "<<std::hex<<obj.info.version_4<<std::endl;
-    cout<<"\tUNK: "<<std::hex<<obj.info.unk1<<std::endl;
+    cout<<"\tPackage Flags: "<<std::hex<<obj.info.package_flags<<std::endl;
 
     cout<<"\tTable Data:"<<std::endl;
     cout<<"\t\tName Table Entries: "<<std::hex<<obj.info.name_table_entries<<std::endl;
     cout<<"\t\tName Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_header_location<<std::endl;
-    cout<<"\t\tTable 2 Entries: "<<std::hex<<obj.info.table_2_entries<<std::endl;
-    cout<<"\t\tTable 2 Decompressed Offset: "<<std::hex<<obj.info.decompressed_table_2_location<<std::endl;
-    cout<<"\t\tTable 3 Entries: "<<std::hex<<obj.info.table_3_entries<<std::endl;
-    cout<<"\t\tTable 3 Decompressed Offset: "<<std::hex<<obj.info.decompressed_table_3_location<<std::endl;
+    cout<<"\t\tExport Table Entries: "<<std::hex<<obj.info.export_table_entries<<std::endl;
+    cout<<"\t\tExport Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_export_table_location<<std::endl;
+    cout<<"\t\tImport Table Entries: "<<std::hex<<obj.info.import_table_entries<<std::endl;
+    cout<<"\t\tImport Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_import_table_location<<std::endl;
 
     cout<<"\tTotal Decompressed Size: "<<std::hex<<obj.info.decompressed_total_size<<std::endl;
     cout<<"\tFile GUID: ";
@@ -173,7 +173,7 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
     }
     cout<<std::endl;
 
-    cout<<"\tUNK 2:"<<std::hex<<obj.info.unk2<<std::endl;
+    cout<<"\tCompression Flag:"<<std::hex<<obj.info.compression_flag<<std::endl;
 
     cout<<"\tPackage: "<<std::hex<<obj.info.main_package_name<<std::endl;
     cout<<"\tPackages Count: "<<std::hex<<obj.info.number_of_packages<<std::endl;
