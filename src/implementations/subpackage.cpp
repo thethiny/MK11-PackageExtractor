@@ -5,8 +5,9 @@ void SubPackage::read(std::ifstream& fin)
     unsigned int read_size = sizeof(info);
     char* read_array = new char [read_size];
     fin.read(read_array, read_size);
-
     memcpy(&info, read_array, read_size);
+
+    delete [] read_array;
 }
 
 void SubPackage::read_info(std::ifstream& fin)
@@ -18,7 +19,7 @@ void SubPackage::read_info(std::ifstream& fin)
 std::ostream &operator<<(std::ostream& cout, SubPackage obj)
 {
     cout<<"\tSubPackage #"<<obj.id<<":"<<std::endl;
-    cout<<"\t\tUnknown: "<<obj.info.unkown<<std::endl;
+    cout<<"\t\tData Decompressed Offset: "<<obj.info.decompressed_offset<<std::endl;
     cout<<"\t\tDecompressed Size: "<<obj.info.dec_size<<std::endl;
     cout<<"\t\tStart Offset: "<<obj.info.st_offset<<std::endl;
     cout<<"\t\tSegment Size: "<<obj.info.seg_size;

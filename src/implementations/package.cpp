@@ -30,7 +30,7 @@ std::ostream &operator<<(std::ostream& cout, Package obj)
 {
     cout<<"Package #"<<obj.id<<":"<<std::endl;
     cout<<"\tName: "<<obj.name<<std::endl;
-    cout<<"\tUnknown: "<<obj.info.unk<<std::endl;
+    cout<<"\tData Decompressed Offset: "<<obj.info.decompressed_offset<<std::endl;
     cout<<"\tDecompressed Size: "<<obj.info.decompressed_size<<std::endl;
     cout<<"\tStart Offset: "<<obj.info.start_offset<<std::endl;
     cout<<"\tSegment Size: "<<obj.info.segment_size<<std::endl;

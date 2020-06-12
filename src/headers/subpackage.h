@@ -6,7 +6,7 @@
 class SubPackage{
     public:
         struct Info{
-            uint64_t unkown;
+            uint64_t decompressed_offset;
             uint64_t dec_size;
             uint64_t st_offset;
             uint64_t seg_size;

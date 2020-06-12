@@ -15,6 +15,7 @@ void SegmentInfo::read(std::ifstream& fin)
     char* read_array = new char [read_size];
     fin.read(read_array, read_size);
     memcpy(&info, read_array, read_size);
+    delete [] read_array;
 
     while (dec_sum < info.segment_decompressed_size)
     {
@@ -25,6 +26,7 @@ void SegmentInfo::read(std::ifstream& fin)
         memcpy(&chunk, read_array, read_size);
         dec_sum += chunk.decompressed_size;
         compressed_segments_count++;
+        delete [] read_array;
     }
 
     uint64_t data_location = fin.tellg();
@@ -53,7 +55,7 @@ std::ostream &operator<<(std::ostream& cout, SegmentInfo obj)
 {
     cout<<"\t\tInfo:"<<std::endl;
     cout<<"\t\tUnknown: "<<obj.info.unk<<std::endl;
-    cout<<"\t\tUnknown 2: "<<obj.info.unk2<<std::endl;
+    cout<<"\t\tMaximum Segment Decompressed Size: "<<obj.info.max_seg_dec_size<<std::endl;
     cout<<"\t\tFull Compressed Size: "<<obj.info.segment_compressed_size<<std::endl;
     cout<<"\t\tFull Decompressed Size: "<<obj.info.segment_decompressed_size<<std::endl;
     cout<<"\t\tCompressed Segments Found: "<<obj.compressed_segments_count;

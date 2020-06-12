@@ -13,7 +13,29 @@
 				"MK11PackageExtractor.exe",
 				"-std=c++11",
 				"-I",
-				"${workspaceFolder}/src/headers",
+				"${workspaceFolder}/src/headers"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: mingw64 g++.exe build active file",
+			"command": "x86_64-w64-mingw32-g++.exe",
+			"args": [
+				"-g",
+				"${workspaceFolder}/src/rewrite.cpp",
+				"${workspaceFolder}/src/implementations/*.cpp",
+				"-o",
+				"MK11PackageExtractor.exe",
+				"-std=c++11",
+				"-I",
+				"${workspaceFolder}/src/headers"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

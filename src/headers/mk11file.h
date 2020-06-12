@@ -3,6 +3,7 @@
 
 #include "package.h"
 #include "filehandle.h"
+#include "iomanip"
 
 class MK11File{
     private:
@@ -20,14 +21,23 @@ class MK11File{
             uint32_t magic;
             uint16_t version_1;
             uint16_t version_2;
-            uint32_t unk1;
-            uint32_t unk2;
+            uint32_t decompressed_start; // Location of Data in Total Decompressed Data
+            uint32_t file_version; // Maybe
             uint32_t engine_version;
             char game_name[4];
             uint32_t version_3;
-            uint32_t unk3;
+            uint32_t version_4;
             char main_package_name[4];
-            char unk_large[0x44];
+            uint32_t unk1;
+            uint32_t name_table_entries;
+            uint64_t decompressed_header_location; // Location of Header in the Total Decompressed Data
+            uint32_t table_2_entries;
+            uint64_t decompressed_table_2_location;
+            uint32_t table_3_entries;
+            uint64_t decompressed_table_3_location;
+            uint64_t decompressed_total_size;
+            uint8_t file_GUID[0x10];
+            uint32_t unk2;
             uint32_t number_of_packages;
         } __attribute__((packed)) info; 
 
@@ -38,6 +48,8 @@ class MK11File{
 
         Package* packages;
         Package* packages_extra;
+
+        const uint64_t MAX_DEC_SIZE = 0x20000; // Maximum Size for a chunk of uncompressed data
 
         FileHandle* input_file_obj;
 

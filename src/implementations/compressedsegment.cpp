@@ -6,6 +6,7 @@ void CompressedSegment::read(std::ifstream& fin)
     char* read_array = new char [read_size];
     fin.read(read_array, read_size);
     memcpy(&info, read_array, read_size);
+    delete [] read_array;
 }
 
 void CompressedSegment::read_data(std::ifstream& fin)
