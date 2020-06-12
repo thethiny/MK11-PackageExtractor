@@ -147,6 +147,8 @@ After all segments done, repeat from [Segments](#segments) until file is done.
 
 You need GCC Compiler because I'm using [`__attribute__((packed))`](http://www.keil.com/support/man/docs/armclang_ref/armclang_ref_chr1359124982232.htm#:~:text=__attribute__((packed))%20variable%20attribute,-Home%20%C2%BB%20armclang%20Reference&text=You%20can%20specify%20the%20packed,has%20the%20smallest%20possible%20alignment.).
 
+You also need the x64 version since Decompression relies on the x64 space.
+
 I'm importing `windows.h` therefore it'll fail in Linux. Swap for Mac/Linux equivalent on your machine.
 
 For Visual Code, download the C++ Intellisense extension and add a build task to your config to automatically include all the includes and all the local files to match them together. Also add src/headers to your include dir as well as the standard libraries to your `.vscode/c_cpp_properties.json` if you want to edit in Visual Code for linking.
