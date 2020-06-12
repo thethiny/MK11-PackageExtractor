@@ -45,11 +45,11 @@ int64_t Oodle::Compress(char *src_buf, uint64_t src_len, char* dst_buf)
 
 void Oodle::Decompress(char* src_buf, int64_t src_len, char* dst_buf, uint64_t dst_len)
 {
-    // int data_size = oodl_decompress(src_buf, src_len, dst_buf, dst_len, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    int data_size = oodl_decompress(src_buf, src_len, dst_buf, dst_len, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     oodl_decompress(src_buf, src_len, dst_buf, dst_len, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-    // if (data_size < 0)
-    // {
-    //     throw std::string("Decompression Error");
-    // }
+    if (data_size < 0)
+    {
+        throw std::string("Decompression Error");
+    }
 }

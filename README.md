@@ -131,7 +131,7 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Reading XXX Table
   - [ ] Understanding XXX Table
 - HeaderData Package of XXX File
-  - [ ] Understanding
+  - [x] Understanding
   - [ ] Mapping Name/Import/Export Tables
 - Extra
   - [x] Add flag to skip PSF
@@ -139,6 +139,8 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Change file input to load by location not by folder "Files"
   - [ ] Generate info to enable repacking of files
   - [ ] Extracted files should have proper names
+  - [x] File Decompression
+  - [x] File Compression
 
 
 # How to build
