@@ -7,22 +7,29 @@ The .xxx package is a modified UE4 package that looks as follows:
 
 ## Header
 
-| Name               | Size |    Value    |
-|--------------------|:----:|:-----------:|
-| Magic              |   4  | C1 83 2A 9E |
-| Engine Version 1/2 |   2  |    01 03    |
-| Engine Version 2/2 |   2  |    9D 00    |
-| Unknown            |   4  |             |
-| Unknown            |   4  |             |
-| Script Version     |   4  | E7 01 00 00 |
-| Game Identifier    |   4  |    "MK11"   |
-| ? Version          |   4  | 50 00 00 00 |
-| Unknown            |   4  |             |
-| Main Package       |   4  |    "MAIN"   |
-
-Uknown until 0x68
-
-4 Packages Count
+| Name                                      | Size |    Value    |
+|-------------------------------------------|:----:|:-----------:|
+| Magic                                     |   4  | C1 83 2A 9E |
+| Engine Version 1/2                        |   2  |    01 03    |
+| Engine Version 2/2                        |   2  |    9D 00    |
+| Decompressed Data Start Location          |   4  |             |
+| ? Version                                 |   4  | 2E 0A 00 00 |
+| Script Version                            |   4  | E7 01 00 00 |
+| Game Identifier                           |   4  |    "MK11"   |
+| ? Version                                 |   4  | 50 00 00 00 |
+| ? Version                                 | 4    | 4B 04 00 00 |
+| Main Package                              | 4    | "MAIN"      |
+| Unknown                                   | 4    |             |
+| Name Table Entries                        |   4  |             |
+| Name Table Offset in Decompressed Data    |   8  |             |
+| Table 3 Entries                           |   4  |             |
+| Table 3 Offset in Decompressed Data       |   8  |             |
+| Table 2 Entries                           |   4  |             |
+| Table 2 Offset in Decompressed Data       |   8  |             |
+| Total Decompressed Size - _BulkData Files | 8    |             |
+| GUID                                      | 16   |             |
+| Unknown                                   | 4    |             |
+| Number of Packages                        |  4    |             |
 
 ## Packages
 
@@ -32,7 +39,7 @@ For each Package in Package Count
 |----------------------------------------|:-------------------:|:------:|
 | Package Name Length                    |          4          |        |
 | Package Name                           | Package Name Length | String |
-| Unknown                                |          8          |        |
+| Offset in Decompressed Data            |          8          |        |
 | Package Decompressed Buffer Total Size |          8          |        |
 | Package Location                       |          8          |        |
 | Package Size                           |          8          |        |
@@ -44,7 +51,7 @@ For each Sub Package in Sub Packages Count
 
 | Name                         | Size | Value |
 |------------------------------|:----:|:-----:|
-| Unknown                      |   8  |       |
+| Offset in Decompressed Data  |   8  |       |
 | Decompressed SubPackage Size |   8  |       |
 | SubPackage Start Location    |   8  |       |
 | SubPackage Size              |   8  |       |
@@ -74,13 +81,13 @@ Until Package 0 Start Offset contains some data that is yet to be understood. Ho
 Then jump to the start location and you enter the Segments.
 
 ## Segments
-| Name                            | Size | Value       |
-|---------------------------------|:----:|:-----------:|
-| Magic                           | 4    | C1 83 2A 9E |
-| Unknown                         | 4    |             |
-| Unknown                         | 8    |             |
-| Total Segment Compressed Size   | 8    |             |
-| Total Segment Decompressed Size | 8    |             |
+| Name                              | Size | Value       |
+|-----------------------------------|:----:|:-----------:|
+| Magic                             | 4    | C1 83 2A 9E |
+| Unknown                           | 4    |             |
+| Maximum Segment Decompressed Size | 8    |             |
+| Total Segment Compressed Size     | 8    |             |
+| Total Segment Decompressed Size   | 8    |             |
 
 ## Compressed Segments
 
