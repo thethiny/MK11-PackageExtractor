@@ -14,6 +14,8 @@ void btoa(uint8_t* char_array, dtype value, uint64_t size)
 
 }
 
+uint32_t swap_uint32(uint32_t);
+
 class ArgumentParser
 {
     public:

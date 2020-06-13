@@ -1,9 +1,10 @@
 #ifndef MK11HEADER_H
 #define MK11HEADER_H
 
+#include <iomanip>
 #include "package.h"
 #include "filehandle.h"
-#include "iomanip"
+#include "utils.h"
 
 class MK11File{
     private:
@@ -47,6 +48,61 @@ class MK11File{
             LZO   = 0x0002u,
             LZX   = 0x0004u,
             OODLE = 0x0100u
+        };
+
+        enum package_flags
+        {
+            PKG_None                          = 0x00000000,
+            PKG_NewlyCreated                  = 0x00000001,
+            PKG_ClientOptional                = 0x00000002,
+            PKG_ServerSideOnly                = 0x00000004,
+            PKG_CompiledIn                    = 0x00000010,
+            PKG_ForDiffing                    = 0x00000020,
+            PKG_EditorOnly                    = 0x00000040,
+            PKG_Developer                     = 0x00000080,
+            PKG_UncookedOnly                  = 0x00000100,
+            PKG_ContainsMapData               = 0x00004000,
+            PKG_Compiling                     = 0x00010000,
+            PKG_ContainsMap                   = 0x00020000,
+            PKG_RequiresLocalizationGather    = 0x00040000,
+            PKG_PlayInEditor                  = 0x00100000,
+            PKG_ContainsScript                = 0x00200000,
+            PKG_DisallowExport                = 0x00400000,
+            PKG_ReloadingForCooker            = 0x40000000,
+            PKG_FilterEditorOnly              = 0x80000000,
+        };
+
+        enum object_flags
+        {
+            RF_NoFlags                         =0x00000000,
+            RF_Public                          =0x00000001,
+            RF_Standalone                      =0x00000002,
+            RF_MarkAsNative                    =0x00000004,
+            RF_Transactional                   =0x00000008,
+            RF_ClassDefaultObject              =0x00000010,
+            RF_ArchetypeObject                 =0x00000020,
+            RF_Transient                       =0x00000040,
+            RF_MarkAsRootSet                   =0x00000080,
+            RF_TagGarbageTemp                  =0x00000100,
+            RF_NeedInitialization              =0x00000200,
+            RF_NeedLoad                        =0x00000400,
+            RF_KeepForCooker                   =0x00000800,
+            RF_NeedPostLoad                    =0x00001000,
+            RF_NeedPostLoadSubobjects          =0x00002000,
+            RF_NewerVersionExists              =0x00004000,
+            RF_BeginDestroyed                  =0x00008000,
+            RF_FinishDestroyed                 =0x00010000,
+            RF_BeingRegenerated                =0x00020000,
+            RF_DefaultSubObject                =0x00040000,
+            RF_WasLoaded                       =0x00080000,
+            RF_TextExportTransient             =0x00100000,
+            RF_LoadCompleted                   =0x00200000,
+            RF_InheritableComponentTemplate    =0x00400000,
+            RF_DuplicateTransient              =0x00800000,
+            RF_StrongRefOnFrame                =0x01000000,
+            RF_NonPIEDuplicateTransient        =0x02000000,
+            RF_Dynamic                         =0x04000000,
+            RF_WillBeLoaded                    =0x08000000,
         };
 
         uint32_t number_of_extra_packages = 0;

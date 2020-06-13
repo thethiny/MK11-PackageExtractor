@@ -82,3 +82,15 @@ void ArgumentParser::show_help()
     std::cerr<<"\tMandatory:\n\t\t-f"<<std::endl;
     throw std::string("Incorrect Usage");
 }
+
+uint32_t swap_uint32(uint32_t to_swap)
+{
+    uint32_t swapped = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        swapped <<= 8;
+        swapped |= (uint8_t)to_swap;
+        to_swap >>= 8;
+    }
+    return swapped;
+}

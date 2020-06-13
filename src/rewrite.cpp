@@ -231,8 +231,8 @@ int main(int argv, const char* argc[])
 
                         // DECOMPRESSION HERE
                         CompressedSegment* c_seg = &mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k];
-                        std::string out_f_dec = mk11_obj.input_file_obj->join(names, 2) + string(".dec");
-                        ofstream fout_dec(out_f_dec.c_str(), ios::binary);
+                        // std::string out_f_dec = mk11_obj.input_file_obj->join(names, 2) + string(".dec");
+                        // ofstream fout_dec(out_f_dec.c_str(), ios::binary);
                         
                         char *out_data = new char [c_seg->info.compressed_segment_decompressed_size];
                         compression_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
