@@ -19,16 +19,16 @@ The .xxx package is a modified UE4 package that looks as follows:
 | ? Version                                 |   4   | 50 00 00 00 |
 | ? Version                                 |   4   | 4B 04 00 00 |
 | Main Package                              |   4   |    "MAIN"   |
-| Unknown                                   |   4   |             |
+| Package Flags                             |   4   |             |
 | Name Table Entries                        |   4   |             |
 | Name Table Offset in Decompressed Data    |   8   |             |
-| Table 3 Entries                           |   4   |             |
-| Table 3 Offset in Decompressed Data       |   8   |             |
-| Table 2 Entries                           |   4   |             |
-| Table 2 Offset in Decompressed Data       |   8   |             |
+| Export Table Entries                      |   4   |             |
+| Export Table Offset in Decompressed Data  |   8   |             |
+| Import Table Entries                      |   4   |             |
+| Import Table Offset in Decompressed Data  |   8   |             |
 | Total Decompressed Size - _BulkData Files |   8   |             |
 | GUID                                      |   16  |             |
-| Unknown                                   |   4   |             |
+| Compression Flag                          |   4   |             |
 | Number of Packages                        |   4   |             |
 
 ## Packages
