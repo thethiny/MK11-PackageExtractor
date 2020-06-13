@@ -114,7 +114,7 @@ After all segments done, repeat from [Segments](#segments) until file is done.
 
 - XXX File Header
   - [x] Reading
-  - [ ] Understanding
+  - [x] Understanding
 - XXX File Packages
   - [x] Reading
   - [x] Understanding
@@ -146,8 +146,10 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Change file input to load by location not by folder "Files"
   - [ ] Generate info to enable repacking of files
   - [ ] Extracted files should have proper names
-  - [x] File Decompression
-  - [x] File Compression
+  - [x] Oodle Decompression
+  - [x] Oodle Compression
+  - [ ] Zlib Decompression
+  - [ ] Zlib Compression
 
 
 # How to build

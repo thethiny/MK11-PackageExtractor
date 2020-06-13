@@ -41,3 +41,4 @@ output
 test.cpp
 *.txt
 !resources.txt
+*.log
