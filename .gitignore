@@ -40,3 +40,4 @@ output
 # Files
 test.cpp
 *.txt
+!resources.txt

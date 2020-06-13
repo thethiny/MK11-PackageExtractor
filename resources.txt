@@ -1,0 +1,5 @@
+http://eliotvu.com/page/unreal-package-file-format
+https://docs.unrealengine.com/en-US/API/Runtime/CoreUObject/UObject/EPackageFlags/index.html
+https://www.gildor.org/smf/index.php?topic=882.0
+https://www.gildor.org/smf/index.php/topic,297.0.html
+http://www.scribd.com/doc/54572848/UT-Package-File-Format
