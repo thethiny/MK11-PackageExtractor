@@ -12,10 +12,13 @@ void FileHandle::set(std::string fname)
 {
     file_in_name = fname;
     file_in_psf_name = get_psf_name(fname);
+    file_out_upk_name = reext(get_base_name(fname), extensions.unpacked_file);
     std::string params[2] = {output_folder, get_base_name(fname)};
     folder_out_name = join(params, 2);
     std::string params2[2] = {folder_out_name, extra_folder_name};
-    folder_out_extra_name = join(params2, 2);    
+    folder_out_extra_name = join(params2, 2);
+    params2[1] = file_out_upk_name;
+    file_out_upk_name = join(params2, 2);
 }
 
 std::string FileHandle::join(std::string* names, uint64_t count)
@@ -84,19 +87,26 @@ std::string FileHandle::get_base_name(std::string file_name)
 
 std::string FileHandle::get_psf_name(std::string file_name)
 {
-    return get_name_no_extension(file_name) + ".psf";
+    return get_name_no_extension(file_name) + extensions.extra_package;
+}
+
+std::string FileHandle::reext(std::string file_name, std::string extension)
+{
+    return get_name_no_extension(file_name) + extension;
 }
 
 void FileHandle::print()
 {
     std::cout<<"File Name: "<<file_in_name<<std::endl;
     std::cout<<"PSF File Name: "<<file_in_psf_name<<std::endl;
+    std::cout<<"UPK File Name: "<<file_out_upk_name<<std::endl;
 }
 
 std::ostream& operator<<(std::ostream& cout, FileHandle &obj)
 {
     cout<<"File Name: "<<obj.file_in_name<<std::endl;
     cout<<"PSF File Name: "<<obj.file_in_psf_name<<std::endl;
+    cout<<"UPK File Name: "<<obj.file_out_upk_name<<std::endl;
     cout<<"Output Name: "<<obj.folder_out_name;
     return cout;
 }
@@ -116,6 +126,14 @@ void FileHandle::open_files()
         std::cerr<<"PSF File not present."<<std::endl;
     }
     file_in_psf>>std::noskipws;
+
+    file_out_upk.open(file_out_upk_name, std::ios::binary);
+    if (!file_out_upk)
+    {
+        throw std::string("Couldn't make output file " + file_out_upk_name);
+    }
+
+    
 }
 
 std::string FileHandle::make_file_out_name(uint64_t seg_id, uint64_t chunk_id)

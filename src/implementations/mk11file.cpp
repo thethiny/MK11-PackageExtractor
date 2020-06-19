@@ -11,8 +11,6 @@ void MK11File::read(std::ifstream& fin)
     memcpy(&info, read_array, sizeof(info));
     delete [] read_array;
 
-    // info.package_flags = swap_uint32(info.package_flags); //Unkown yet
-
     try
     {
         validate_header();
@@ -27,7 +25,7 @@ void MK11File::read(std::ifstream& fin)
 
     read_packages(fin);
     read_packages_extra(fin);
-    fin.seekg(0x18u, std::ios::cur); // 0x18 Bytes of Padding
+    fin.seekg(0x18u, std::ios::cur); // 0x18 Bytes of Unknown
     read_footing(fin);
     read_extra_tables(fin);
     read_compressed_segments(fin);
@@ -44,8 +42,6 @@ void MK11File::read_footing(std::ifstream& fin)
     internal_file_name = new char [name_len];
 
     fin.read(internal_file_name, name_len);
-
-
 }
 
 void MK11File::read_extra_tables(std::ifstream& fin)
@@ -53,7 +49,32 @@ void MK11File::read_extra_tables(std::ifstream& fin)
     /* Not Yet Implemented as lack of knowledge arises,
     however first 4 bytes indicate references to PSF and then read,
     then first 4 bytes indicate tables, then 4 bytes table entries. */
-    fin.seekg(packages[0].subpackages[0].info.st_offset); // For now, just go to first entry
+
+    char arr[4];
+    fin.read(arr, 4);
+    memcpy(&number_of_extra_packages_tables, arr, 4);
+    psf_tables = new ExtraTable [number_of_extra_packages_tables];
+
+    /// Read PSF Table
+
+    for (uint32_t i = 0; i < number_of_extra_packages_tables; i++)
+    {
+        psf_tables[i].read(fin);
+        psf_tables[i].id = i;
+    }
+
+    fin.read(arr, 4);
+    memcpy(&number_of_bulk_packages_tables, arr, 4);
+    bulk_tables = new ExtraTable [number_of_bulk_packages_tables];
+
+    /// Read Bulk Table
+    for (uint32_t i = 0; i < number_of_bulk_packages_tables; i++)
+    {
+        bulk_tables[i].read(fin);
+        bulk_tables[i].id = i;
+    }
+
+    fin.seekg(packages[0].subpackages[0].info.st_offset); // Go to first entry
 
 }
 
@@ -101,7 +122,7 @@ void MK11File::read_compressed_segments_extra()
         std::cerr<<"PSF File Not Required."<<std::endl;
         return;
     }
-    else if (!input_file_obj->file_in_psf)
+    else if (!hFileObj->file_in_psf)
     {
         std::cerr<<"Couldn't find required PSF File... Skipping."<<std::endl;
         return;
@@ -112,7 +133,7 @@ void MK11File::read_compressed_segments_extra()
     {
         for (uint32_t j = 0; j < packages_extra[i].info.number_of_subpackages; j++)
         {
-            packages_extra[i].subpackages[j].read_info(input_file_obj->file_in_psf);
+            packages_extra[i].subpackages[j].read_info(hFileObj->file_in_psf);
         }
     }
 }
@@ -307,7 +328,32 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
 
     cout<<"\tPackages Count: "<<std::hex<<obj.info.number_of_packages<<std::endl;
     cout<<"\tExtra Packages Count: "<<std::hex<<obj.number_of_extra_packages<<std::endl;
-    cout<<"\tInternal File Name: "<<std::hex<<obj.internal_file_name;
+    cout<<"\tInternal File Name: "<<std::hex<<obj.internal_file_name<<std::endl;
+    cout<<"\tExtra Packages Table Count: "<<std::hex<<obj.number_of_extra_packages_tables<<std::endl;
+    cout<<"\tBulk Packages Table Count: "<<std::hex<<obj.number_of_bulk_packages_tables;
     
     return cout;
 }
+
+ std::ofstream& operator<<(std::ofstream& fout, MK11File obj)
+ {
+    fout.write((char*)&obj.info, sizeof(obj.info)-8u);
+    for (int i = 0; i < 4 + 8 + 0x18; i++) //4 Compression Flag, 8 Padding, 0x18 Padding
+        fout<<char(0);
+    
+    uint32_t name_len = strlen(obj.internal_file_name) +1;
+    fout.write((char*)&name_len, 4);
+    fout.write(obj.internal_file_name, name_len);
+
+    fout.write((char*)&obj.number_of_extra_packages_tables, sizeof(obj.number_of_extra_packages_tables));
+    fout.write((char*)&obj.number_of_bulk_packages_tables, sizeof(obj.number_of_bulk_packages_tables));
+
+    for (uint32_t i = 0; i < obj.number_of_extra_packages_tables; i++)
+        fout<<obj.psf_tables[i];
+
+    for (uint32_t i = 0; i < obj.number_of_bulk_packages_tables; i++)
+        fout<<obj.bulk_tables[i];
+
+
+    return fout;
+ }

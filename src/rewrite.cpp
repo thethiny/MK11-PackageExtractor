@@ -69,25 +69,28 @@ int main(int argv, const char* argc[])
     
     try
     {
-        _mkdir(mk11_obj.input_file_obj->output_folder.c_str()); // output
-        mk11_obj.read(mk11_obj.input_file_obj->file_in);
+        _mkdir(mk11_obj.hFileObj->output_folder.c_str()); // output
+        mk11_obj.read(mk11_obj.hFileObj->file_in);
         cout<<mk11_obj<<endl;
         cout<<endl;
 
+        /// Create UPK
+        mk11_obj.hFileObj->file_out_upk<<mk11_obj;
+
         try
         {
-            if (mk11_obj.info.compression_flag == 0x100u)
+            if (mk11_obj.info.compression_flag == MK11File::compression_flags::OODLE)
             {
                 compression_obj = new Oodle(oodle_folder);
                 cerr<<"Compression Type Set To Oodle"<<endl;
             }
-                
-            else if (mk11_obj.info.compression_flag == 0x01u)
+            else if (mk11_obj.info.compression_flag == MK11File::compression_flags::ZLIB)
             {
                 compression_obj = new Zlib("./zlib1.dll");
                 cerr<<"Compression Type Set To Zlib"<<endl;
             }
-            else {
+            else
+            {
                 cerr<<"Unsupported Compression!";
                 return -1;
             }
@@ -98,13 +101,13 @@ int main(int argv, const char* argc[])
             return 1;
         }
 
-        _mkdir(mk11_obj.input_file_obj->folder_out_name.c_str()); // Make Directory
+        _mkdir(mk11_obj.hFileObj->folder_out_name.c_str()); // Make Directory
         for (uint32_t i = 0; i < mk11_obj.info.number_of_packages; i++)
         {
             cout<<mk11_obj.packages[i]<<endl;
-            string folder_out = mk11_obj.input_file_obj->make_folder_out_name(i, mk11_obj.packages[i].name); // id_PackageName
-            string params[2] = {mk11_obj.input_file_obj->folder_out_name, folder_out};
-            string mk_folder_out = mk11_obj.input_file_obj->join(params, 2);
+            string folder_out = mk11_obj.hFileObj->make_folder_out_name(i, mk11_obj.packages[i].name); // id_PackageName
+            string params[2] = {mk11_obj.hFileObj->folder_out_name, folder_out};
+            string mk_folder_out = mk11_obj.hFileObj->join(params, 2);
             _mkdir(mk_folder_out.c_str()); // Make Directory
             for (uint32_t j = 0; j < mk11_obj.packages[i].info.number_of_subpackages; j++)
             {
@@ -118,66 +121,32 @@ int main(int argv, const char* argc[])
                     mk_folder_out,
                     coal_name.str()
                 };
-                string dec_out_name = mk11_obj.input_file_obj->join(names, 2);
+                string dec_out_name = mk11_obj.hFileObj->join(names, 2);
                 ofstream coal_out(dec_out_name.c_str(), ios::binary);
                 for (uint32_t k = 0; k < mk11_obj.packages[i].subpackages[j].segment.compressed_segments_count; k++)
                 {
                     cerr<<"\rDecompressing into "<<dec_out_name<<" ("<<k+1<<"/"
                         <<mk11_obj.packages[i].subpackages[j].segment.compressed_segments_count<<")";
                     cout<<mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k]<<endl;
-                    // string file_out = mk11_obj.input_file_obj->make_file_out_name(j, k); //SubpackageId_SegmentId.oodle
-                    // std::string names[2] = {
-                    //     mk_folder_out,
-                    //     file_out
-                    // };
-                    // std::string out_f = mk11_obj.input_file_obj->join(names, 2);
-                    // cerr<<"Extracting file to "<<out_f<<endl;
-                    mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.input_file_obj->file_in);
 
-                    // ofstream fout(out_f.c_str(), ios::binary);
-                    // fout<<mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k];
-                    // fout.flush();
-                    // fout.close();
+                    mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.hFileObj->file_in);
 
                     // DECOMPRESSION HERE
                     CompressedSegment* c_seg = &mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k];
-                    // std::string out_f_dec = mk11_obj.input_file_obj->join(names, 2) + string(".dec");
-                    // ofstream fout_dec(out_f_dec.c_str(), ios::binary);
                     
                     char *out_data = new char [c_seg->info.compressed_segment_decompressed_size];
                     compression_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
                     c_seg->info.compressed_segment_decompressed_size);
-                    // cerr<<"Decompressed"<<endl;
 
                     for (uint64_t d = 0; d < c_seg->info.compressed_segment_decompressed_size; d++)
                     {
-                        // fout_dec<<out_data[d];
                         coal_out<<out_data[d];
+                        mk11_obj.hFileObj->file_out_upk<<out_data[d]; //Write Dec Data into UPK File
                     }
-                    // fout_dec.flush();
-                    // fout_dec.close();
                     coal_out.flush();
 
-                    // // TESTING RECOMPRESSION HERE
-                    // std::string out_f_enc = mk11_obj.input_file_obj->join(names, 2) + string(".dec.oodl");
-                    // char* cmp_data = new char [c_seg->info.compressed_segment_decompressed_size + 0x10000];
-                    // ofstream fout_enc(out_f_enc.c_str(), ios::binary);
-                    // int64_t out_size = compression_obj->Compress(out_data, c_seg->info.compressed_segment_decompressed_size, cmp_data);
-                    // uint8_t* size_array = new uint8_t[8];
-                    // btoa(size_array, c_seg->info.compressed_segment_decompressed_size, 8);
-                    // for (uint64_t d = 0; d < 8; d++)
-                    // {
-                    //     fout_enc<<size_array[d];
-                    // }
-                    // for (uint64_t d = 0; d < out_size; d++)
-                    // {
-                    //     fout_enc<<cmp_data[d];
-                    // }
-                    // cerr<<"Compressed"<<endl;
-                    // fout_enc.close();
                     mk11_obj.packages[i].subpackages[j].segment.compressed_segments[k].delete_data();
                     delete [] out_data;
-                    // delete [] cmp_data;
                 }
                 cerr<<endl;
                 coal_out.close();
@@ -188,13 +157,13 @@ int main(int argv, const char* argc[])
         if (mk11_obj.number_of_extra_packages && mk11_obj.get_psf_status())
         {
             cout<<"Extra Packages: "<<endl;
-            _mkdir(mk11_obj.input_file_obj->folder_out_extra_name.c_str()); // Make Directory
+            _mkdir(mk11_obj.hFileObj->folder_out_extra_name.c_str()); // Make Directory
             for (uint32_t i = 0; i < mk11_obj.number_of_extra_packages; i++)
             {
                 cout<<mk11_obj.packages_extra[i]<<endl;
-                string folder_out = mk11_obj.input_file_obj->make_folder_out_name(i, mk11_obj.packages_extra[i].name); // id_ExtraPackageName
-                string params[2] = {mk11_obj.input_file_obj->folder_out_extra_name, folder_out};
-                string mk_folder_out = mk11_obj.input_file_obj->join(params, 2);
+                string folder_out = mk11_obj.hFileObj->make_folder_out_name(i, mk11_obj.packages_extra[i].name); // id_ExtraPackageName
+                string params[2] = {mk11_obj.hFileObj->folder_out_extra_name, folder_out};
+                string mk_folder_out = mk11_obj.hFileObj->join(params, 2);
                 _mkdir(mk_folder_out.c_str()); // Make Directory
                 for (uint32_t j = 0; j < mk11_obj.packages_extra[i].info.number_of_subpackages; j++)
                 {
@@ -208,7 +177,7 @@ int main(int argv, const char* argc[])
                         mk_folder_out,
                         coal_name.str()
                     };
-                    string dec_out_name = mk11_obj.input_file_obj->join(names, 2);
+                    string dec_out_name = mk11_obj.hFileObj->join(names, 2);
                     ofstream coal_out(dec_out_name.c_str(), ios::binary);
                     // cerr<<"Decompressing into "<<coal_name.str()<<endl;
                     
@@ -217,36 +186,19 @@ int main(int argv, const char* argc[])
                         cerr<<"\rDecompressing into "<<dec_out_name<<" ("<<k+1<<"/"
                             <<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments_count<<")";
                         cout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k]<<endl;
-                        // string file_out = mk11_obj.input_file_obj->make_file_out_name(j, k); //SubpackageId_SegmentId.oodle
-                        // std::string names[2] = {
-                        //     mk_folder_out,
-                        //     file_out
-                        // };
-                        // std::string out_f = mk11_obj.input_file_obj->join(names, 2);
-                        // cerr<<"Extracting file to "<<out_f<<endl;
-                        mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.input_file_obj->file_in_psf);
-                        // ofstream fout(out_f.c_str(), ios::binary);
-                        // fout<<mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k];
-                        // fout.flush();
-                        // fout.close();
+                        mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k].read_data(mk11_obj.hFileObj->file_in_psf);
 
                         // DECOMPRESSION HERE
                         CompressedSegment* c_seg = &mk11_obj.packages_extra[i].subpackages[j].segment.compressed_segments[k];
-                        // std::string out_f_dec = mk11_obj.input_file_obj->join(names, 2) + string(".dec");
-                        // ofstream fout_dec(out_f_dec.c_str(), ios::binary);
                         
                         char *out_data = new char [c_seg->info.compressed_segment_decompressed_size];
                         compression_obj->Decompress(c_seg->data, c_seg->info.compressed_segment_compressed_size, out_data,
                         c_seg->info.compressed_segment_decompressed_size);
-                        // cerr<<"Decompressed"<<endl;
 
                         for (uint64_t d = 0; d < c_seg->info.compressed_segment_decompressed_size; d++)
                         {
-                            // fout_dec<<out_data[d];
                             coal_out<<out_data[d];
                         }
-                        // fout_dec.flush();
-                        // fout_dec.close();
                         coal_out.flush();
 
                         delete [] out_data;
@@ -257,6 +209,23 @@ int main(int argv, const char* argc[])
 
                 }
                     
+            }
+        }
+        if (mk11_obj.number_of_extra_packages_tables)
+        {
+            cout<<"Extra Packages Table:"<<endl;
+            for (uint32_t i = 0; i < mk11_obj.number_of_extra_packages_tables; i++)
+            {
+                cout<<mk11_obj.psf_tables[i]<<endl;
+            }
+        }
+        
+        if (mk11_obj.number_of_bulk_packages_tables)
+        {
+            cout<<"Bulk Packages Table:"<<endl;
+            for (uint32_t i = 0; i < mk11_obj.number_of_bulk_packages_tables; i++)
+            {
+                cout<<mk11_obj.bulk_tables[i]<<endl;
             }
         }
 

@@ -66,19 +66,47 @@ Repeat Package for each additional Package
 
 ## After all additional Packages
 
-| Name                    |                  Size                 |  Value |
-|-------------------------|:-------------------------------------:|:------:|
-| Padding                 |                  0x18                 |   00   |
-| File Name Length        |                   4                   |        |
-| File Name               |            File Name Length           | String |
-| Unknown PSF Table Count |                   4                   |        |
-| PSF Table               | Unknown PSF Table Count * unk formula |        |
-| Unknown Table Count     | 4                                     |        |
-| Unknown Table           | Unknown Table Count * unk formula     |        |
+| Name                    |                  Size                 |  Value      |
+|-------------------------|:-------------------------------------:|:-----------:|
+| Padding                 |                  0x18                 |     00      |
+| File Name Length        |                   4                   |             |
+| File Name               |            File Name Length           |   String    |
+| PSF Table Count         |                   4                   |             |
+| PSF Table               |                                       | Extra Table |
+| Bulk Data Table Count   |                   4                   |             |
+| Bulk Data Table         |                                       | Extra Table |
 
-Until Package 0 Start Offset contains some data that is yet to be understood. However 0x20 after the name seems to be a counter*2 of some sort.
+PSF Table and Bulk Table are both of the type Extra Table
 
-Then jump to the start location and you enter the Segments.
+## Extra Table(s)
+
+| Name                        |     Size    |  Value |
+|-----------------------------|:-----------:|:------:|
+| UNK1                        |      4      |        |
+| UNK2                        |      4      |        |
+| Name Length                 |      4      |        |
+| Name                        | Name Length | String |
+| Entries Count               |      4      |        |
+
+### Extra Table Entry
+| Name                        |     Size    |  Value |
+|-----------------------------|:-----------:|:------:|
+| Decompressed Size           |      8      |        |
+| Compressed Size             |      8      |        |
+| Offset in Decompressed file |      8      |        |
+| Offset in Compressed File   |      8      |        |
+
+Repeat for `Entries Count`
+
+| Name                        |     Size    |  Value |
+|-----------------------------|:-----------:|:------:|
+| Compression Flag            |      4      |        |
+
+If Compression Flag is 0, Compressed Size/Offset is -1.
+If Compression Flag is not 0 but the data is in a separate file (example, PSF file), then Decompressed/Compressed Offset are the same.
+The point of Decompressed/Compressed offsets are the location within the upk file, since the PSF file doesn't have to be converted to UPK, then the UPK offset is similar to the PSF offset.
+
+
 
 ## Segments
 | Name                              | Size | Value       |
@@ -133,10 +161,12 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Reading
   - [x] Understanding
 - XXX File Footer Extra Info
-  - [ ] Reading PSF Table
-  - [ ] Understanding PSF Table
-  - [ ] Reading XXX Table
-  - [ ] Understanding XXX Table
+  - [X] Reading PSF Table
+  - [X] Understanding PSF Table
+  - [X] Reading Bulk Table
+  - [X] Understanding Bulk Table
+  - [ ] Understanding the reason behind the 0x18 padding
+  - [ ] Understanding the reason behind the 0x08 Padding before file internal name
 - HeaderData Package of XXX File
   - [x] Understanding
   - [ ] Mapping Name/Import/Export Tables
@@ -150,7 +180,7 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Oodle Compression
   - [x] Zlib Decompression
   - [ ] Zlib Compression
-  - [ ] Convert XXX into UPK
+  - [x] Convert XXX into UPK
 
 
 # How to build

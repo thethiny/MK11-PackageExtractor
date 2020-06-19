@@ -5,6 +5,7 @@
 #include "package.h"
 #include "filehandle.h"
 #include "utils.h"
+#include "extra_table.h"
 
 class MK11File{
     private:
@@ -111,13 +112,17 @@ class MK11File{
         char* internal_file_name;
         bool has_psf;
         bool load_psf = true;
+        uint32_t number_of_extra_packages_tables;
+        uint32_t number_of_bulk_packages_tables;
 
         Package* packages;
         Package* packages_extra;
+        ExtraTable* psf_tables;
+        ExtraTable* bulk_tables;
 
         const uint64_t MAX_DEC_SIZE = 0x20000; // Maximum Size for a chunk of uncompressed data
 
-        FileHandle* input_file_obj;
+        FileHandle* hFileObj;
 
         void read(std::ifstream&);
         void read_footing(std::ifstream&);
@@ -126,12 +131,13 @@ class MK11File{
         void read_packages_extra(std::ifstream&);
         void read_compressed_segments(std::ifstream&);
         void read_compressed_segments_extra();
-        void register_file(FileHandle& file) {input_file_obj = &file;}
+        void register_file(FileHandle& file) {hFileObj = &file;}
         void set_psf_status(bool status) {has_psf = status && number_of_extra_packages && load_psf;}
         bool get_psf_status() {return has_psf;}
         void print();
         void print_guid(std::ostream&, const MK11File&);
         friend std::ostream &operator<<(std::ostream&, MK11File);
+        friend std::ofstream& operator<<(std::ofstream&, MK11File);
 
 };
 

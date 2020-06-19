@@ -17,7 +17,7 @@ void SegmentInfo::read(std::ifstream& fin)
     memcpy(&info, read_array, read_size);
     delete [] read_array;
 
-    while (dec_sum < info.segment_decompressed_size)
+    while (dec_sum < info.segment_decompressed_size) // Replace this with precalculated segment count (ceil(dec_size/max_size))
     {
         Chunk chunk;
         uint64_t read_size = sizeof(chunk);
