@@ -10,14 +10,14 @@ The .xxx package is a modified UE4 package that looks as follows:
 | Name                                      | Size |    Value    |
 |-------------------------------------------|:-----:|:-----------:|
 | Magic                                     |   4   | C1 83 2A 9E |
-| Engine Version 1/2                        |   2   |    01 03    |
-| Engine Version 2/2                        |   2   |    9D 00    |
+| File Version                              |   2   |    01 03    |
+| Licensee Version                          |   2   |    9D 00    |
 | Decompressed Data Start Location          |   4   |             |
-| ? Version                                 |   4   | 2E 0A 00 00 |
-| Script Version                            |   4   | E7 01 00 00 |
-| Game Identifier                           |   4   |    "MK11"   |
-| ? Version                                 |   4   | 50 00 00 00 |
-| ? Version                                 |   4   | 4B 04 00 00 |
+| Shader Version                            |   4   | 2E 0A 00 00 |
+| Engine Version                            |   4   | E7 01 00 00 |
+| Midway Team's Four CC (Magic)             |   4   |    "MK11"   |
+| Midway Team's Engine Version              |   4   | 50 00 00 00 |
+| Cook Version                              |   4   | 4B 04 00 00 |
 | Main Package                              |   4   |    "MAIN"   |
 | Package Flags                             |   4   |             |
 | Name Table Entries                        |   4   |             |
@@ -26,8 +26,8 @@ The .xxx package is a modified UE4 package that looks as follows:
 | Export Table Offset in Decompressed Data  |   8   |             |
 | Import Table Entries                      |   4   |             |
 | Import Table Offset in Decompressed Data  |   8   |             |
-| Total Decompressed Size - _BulkData Files |   8   |             |
-| GUID                                      |   16  |             |
+| BulkData Offset in Decomrpessed Data      |   8   |             |
+| MD5                                       |   16  |             |
 | Compression Flag                          |   4   |             |
 | Number of Packages                        |   4   |             |
 
@@ -60,7 +60,7 @@ For each Sub Package in Sub Packages Count
 
 | Name                         | Size | Value |
 |------------------------------|:----:|:-----:|
-| PSF Packages Count           |   4  |       |
+| Additional Packages Count    |   4  |       |
 
 Repeat Package for each additional Package
 
@@ -148,8 +148,9 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Extracted files should have proper names
   - [x] Oodle Decompression
   - [x] Oodle Compression
-  - [ ] Zlib Decompression
+  - [x] Zlib Decompression
   - [ ] Zlib Compression
+  - [ ] Convert XXX into UPK
 
 
 # How to build

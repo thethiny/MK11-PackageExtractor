@@ -13,7 +13,7 @@ class Oodle: public Compression{
 
         typedef int WINAPI OodleLZ_CompressFunc(
             uint32_t codec, char *src_buf, uint64_t src_len, char *dst_buf, int64_t level,
-            void *opts, int64_t offs);
+            void *opts, int64_t offs, int64_t ununsed, void* scratch, int64_t scratch_size);
         typedef int WINAPI OodleLZ_DecompressFunc(
             char *src_buf, int64_t src_len, char *dst_buf, uint64_t dst_size, int fuzz, int crc, int verbose,
             uint8_t *dst_base, size_t e, void *cb, void *cb_ctx, void *scratch, size_t scratch_size, int threadPhase

@@ -135,7 +135,7 @@ void MK11File::validate_header()
     {
         throw std::string("Licensee Mismatch");
     }
-    // if (info.version_3 != version_info.version_3)
+    // if (info.midway_team_version != version_info.version_3)
     // {
     //     throw std::string("Version 3 Mismatch");
     // }
@@ -146,22 +146,39 @@ void MK11File::print()
     std::cout<<*this<<std::endl;
 }
 
+void MK11File::print_guid(std::ostream &cout, const MK11File &obj)
+{
+    cout<<"\tFile GUID: ";
+    cout<<std::hex<<std::setfill('0')<<std::setw(8)<<obj.info.file_GUID[0];
+    cout<<"-";
+    cout<<std::hex<<std::setfill('0')<<std::setw(4)<<(uint16_t)(obj.info.file_GUID[1]>>16);
+    cout<<"-";
+    cout<<std::hex<<std::setfill('0')<<std::setw(4)<<(uint16_t)obj.info.file_GUID[1];
+    cout<<"-";
+    cout<<std::hex<<std::setfill('0')<<std::setw(4)<<(uint16_t)(obj.info.file_GUID[2]>>16);
+    cout<<"-";
+    cout<<std::hex<<std::setfill('0')<<std::setw(4)<<(uint16_t)obj.info.file_GUID[2];
+    cout<<std::hex<<std::setfill('0')<<std::setw(8)<<obj.info.file_GUID[3];
+    cout<<std::endl;
+}
+
 std::ostream &operator<<(std::ostream& cout, MK11File obj)
 {
+    cout<<std::uppercase;
     cout<<"File Info: "<<std::endl;
     cout<<"\tMagic: "<<std::hex<<obj.info.magic<<std::endl;
     cout<<"\tVersion (file/licensee): "<<std::hex<<obj.info.file_version<<"/"<<obj.info.licensee_version<<std::endl;
     cout<<"\tDecompressed Data Start Location: "<<std::hex<<obj.info.decompressed_start<<std::endl;
-    cout<<"\tVersion UNK1: "<<std::hex<<obj.info.version_2<<std::endl;
+    cout<<"\tShader Version: "<<std::hex<<obj.info.shader_version<<std::endl;
     cout<<"\tEngine Version: "<<std::hex<<obj.info.engine_version<<std::endl;
 
-    cout<<"\tGame: "; // <<std::hex<<obj.info.game_name<<std::endl;
-    for (int i = 0; i < sizeof(obj.info.game_name); i++)
-        cout<<obj.info.game_name[i];
+    cout<<"\tMidway Team FourCC: ";
+    for (int i = 0; i < sizeof(obj.info.midway_team_fourCC); i++)
+        cout<<obj.info.midway_team_fourCC[i];
     cout<<std::endl;
 
-    cout<<"\tVersion UNK2: "<<std::hex<<obj.info.version_3<<std::endl;
-    cout<<"\tVersion UNK3: "<<std::hex<<obj.info.version_4<<std::endl;
+    cout<<"\tMidway Team Version: "<<std::hex<<obj.info.midway_team_version<<std::endl;
+    cout<<"\tCooked Version: "<<std::hex<<obj.info.cooked_version<<std::endl;
     cout<<"\tPackage Flags: "<<std::hex<<obj.info.package_flags<<" ( ";
 
     if (obj.info.package_flags & obj.object_flags::RF_NoFlags)
@@ -268,13 +285,8 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
     cout<<"\t\tImport Table Entries: "<<std::hex<<obj.info.import_table_entries<<std::endl;
     cout<<"\t\tImport Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_import_table_location<<std::endl;
 
-    cout<<"\tTotal Decompressed Size: "<<std::hex<<obj.info.decompressed_total_size<<std::endl;
-    cout<<"\tFile GUID: ";
-    for (uint8_t i = 0; i < sizeof(obj.info.file_GUID); i++)
-    {
-        cout<<std::hex<<std::setfill('0')<<std::setw(2)<<(uint16_t)obj.info.file_GUID[i]<<" ";
-    }
-    cout<<std::endl;
+    cout<<"\tBulk Data Decompressed Offset: "<<std::hex<<obj.info.decompressed_bulk_data_offset<<std::endl;
+    obj.print_guid(cout, obj); //This is MD5 Hash not GUID, Change
 
     cout<<"\tCompression Flag: "<<std::hex<<obj.info.compression_flag<<" ( ";
     if (obj.info.compression_flag & obj.compression_flags::ZLIB)

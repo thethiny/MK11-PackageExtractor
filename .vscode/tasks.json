@@ -37,7 +37,8 @@
 				"-I",
 				"${workspaceFolder}/src/headers",
 				"-static-libgcc",
-				"-static-libstdc++"
+				"-static-libstdc++",
+				"-static"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

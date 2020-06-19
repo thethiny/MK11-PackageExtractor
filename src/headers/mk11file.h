@@ -23,11 +23,11 @@ class MK11File{
             uint16_t file_version;
             uint16_t licensee_version;
             uint32_t decompressed_start; // Location of Data in Total Decompressed Data
-            uint32_t version_2; // Maybe
+            uint32_t shader_version; // Could be Cooked Version
             uint32_t engine_version;
-            char game_name[4];
-            uint32_t version_3;
-            uint32_t version_4;
+            char midway_team_fourCC[4];
+            uint32_t midway_team_version;
+            uint32_t cooked_version; // Could be Shader Version 
             char main_package_name[4];
             uint32_t package_flags;
             uint32_t name_table_entries;
@@ -36,17 +36,19 @@ class MK11File{
             uint64_t decompressed_export_table_location;
             uint32_t import_table_entries;
             uint64_t decompressed_import_table_location;
-            uint64_t decompressed_total_size; // Without files that have _BulkData suffix, need to figure out how to determine bulkdata, prob flag in expTbl.
-            uint8_t file_GUID[0x10];
+            uint64_t decompressed_bulk_data_offset; // Without files that have _BulkData suffix, need to figure out how to determine bulkdata, prob flag in expTbl.
+            uint32_t file_GUID[4];
             uint32_t compression_flag; // Most Probably
             uint32_t number_of_packages;
         } __attribute__((packed)) info; 
 
         enum compression_flags
         {
+            NONE  = 0x0000u,
             ZLIB  = 0x0001u,
             LZO   = 0x0002u,
             LZX   = 0x0004u,
+            PFS   = 0x0008u,
             OODLE = 0x0100u
         };
 
@@ -128,6 +130,7 @@ class MK11File{
         void set_psf_status(bool status) {has_psf = status && number_of_extra_packages && load_psf;}
         bool get_psf_status() {return has_psf;}
         void print();
+        void print_guid(std::ostream&, const MK11File&);
         friend std::ostream &operator<<(std::ostream&, MK11File);
 
 };
