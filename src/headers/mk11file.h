@@ -6,6 +6,7 @@
 #include "filehandle.h"
 #include "utils.h"
 #include "extra_table.h"
+#include "tables.h"
 
 class MK11File{
     private:
@@ -31,11 +32,11 @@ class MK11File{
             uint32_t cooked_version; // Could be Shader Version 
             char main_package_name[4];
             uint32_t package_flags;
-            uint32_t name_table_entries;
+            uint32_t name_table_entries_count;
             uint64_t decompressed_header_location; // Location of Header in the Total Decompressed Data
-            uint32_t export_table_entries;
+            uint32_t export_table_entries_count;
             uint64_t decompressed_export_table_location;
-            uint32_t import_table_entries;
+            uint32_t import_table_entries_count;
             uint64_t decompressed_import_table_location;
             uint64_t decompressed_bulk_data_offset; // Without files that have _BulkData suffix, need to figure out how to determine bulkdata, prob flag in expTbl.
             uint32_t file_GUID[4];
@@ -119,6 +120,9 @@ class MK11File{
         Package* packages_extra;
         ExtraTable* psf_tables;
         ExtraTable* bulk_tables;
+        NameTableEntry* name_table_entries;
+        ExportTableEntry* export_table_entries;
+        ImportTableEntry* import_table_entries;
 
         const uint64_t MAX_DEC_SIZE = 0x20000; // Maximum Size for a chunk of uncompressed data
 
@@ -131,12 +135,15 @@ class MK11File{
         void read_packages_extra(std::ifstream&);
         void read_compressed_segments(std::ifstream&);
         void read_compressed_segments_extra();
+        void read_name_table();
+        void read_export_table();
+        void read_import_table();
         void register_file(FileHandle& file) {hFileObj = &file;}
         void set_psf_status(bool status) {has_psf = status && number_of_extra_packages && load_psf;}
         bool get_psf_status() {return has_psf;}
         void print();
         void print_guid(std::ostream&, const MK11File&);
-        friend std::ostream &operator<<(std::ostream&, MK11File);
+        friend std::ostream& operator<<(std::ostream&, MK11File);
         friend std::ofstream& operator<<(std::ofstream&, MK11File);
 
 };

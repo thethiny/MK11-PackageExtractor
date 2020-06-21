@@ -299,11 +299,11 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
     cout<<")"<<std::endl;
 
     cout<<"\tTable Data:"<<std::endl;
-    cout<<"\t\tName Table Entries: "<<std::hex<<obj.info.name_table_entries<<std::endl;
+    cout<<"\t\tName Table Entries: "<<std::hex<<obj.info.name_table_entries_count<<std::endl;
     cout<<"\t\tName Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_header_location<<std::endl;
-    cout<<"\t\tExport Table Entries: "<<std::hex<<obj.info.export_table_entries<<std::endl;
+    cout<<"\t\tExport Table Entries: "<<std::hex<<obj.info.export_table_entries_count<<std::endl;
     cout<<"\t\tExport Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_export_table_location<<std::endl;
-    cout<<"\t\tImport Table Entries: "<<std::hex<<obj.info.import_table_entries<<std::endl;
+    cout<<"\t\tImport Table Entries: "<<std::hex<<obj.info.import_table_entries_count<<std::endl;
     cout<<"\t\tImport Table Decompressed Offset: "<<std::hex<<obj.info.decompressed_import_table_location<<std::endl;
 
     cout<<"\tBulk Data Decompressed Offset: "<<std::hex<<obj.info.decompressed_bulk_data_offset<<std::endl;
@@ -346,14 +346,49 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
     fout.write(obj.internal_file_name, name_len);
 
     fout.write((char*)&obj.number_of_extra_packages_tables, sizeof(obj.number_of_extra_packages_tables));
-    fout.write((char*)&obj.number_of_bulk_packages_tables, sizeof(obj.number_of_bulk_packages_tables));
-
     for (uint32_t i = 0; i < obj.number_of_extra_packages_tables; i++)
         fout<<obj.psf_tables[i];
 
+    fout.write((char*)&obj.number_of_bulk_packages_tables, sizeof(obj.number_of_bulk_packages_tables));
     for (uint32_t i = 0; i < obj.number_of_bulk_packages_tables; i++)
         fout<<obj.bulk_tables[i];
 
 
     return fout;
  }
+
+void MK11File::read_name_table()
+{
+    name_table_entries = new NameTableEntry [info.name_table_entries_count];
+    hFileObj->file_in_upk.seekg(info.decompressed_header_location);
+
+    for (uint32_t i = 0; i < info.name_table_entries_count; i++)
+    {
+        name_table_entries[i].read(hFileObj->file_in_upk);
+        name_table_entries[i].id = i;
+    }
+}
+
+void MK11File::read_export_table()
+{
+    export_table_entries = new ExportTableEntry [info.export_table_entries_count];
+    hFileObj->file_in_upk.seekg(info.decompressed_export_table_location);
+
+    for (uint32_t i = 0; i < info.export_table_entries_count; i++)
+    {
+        export_table_entries[i].read(hFileObj->file_in_upk);
+        export_table_entries[i].id = i;
+    }
+}
+
+void MK11File::read_import_table()
+{
+    import_table_entries = new ImportTableEntry [info.import_table_entries_count];
+    hFileObj->file_in_upk.seekg(info.decompressed_import_table_location);
+    
+    for (uint32_t i = 0; i < info.import_table_entries_count; i++)
+    {
+        import_table_entries[i].read(hFileObj->file_in_upk);
+        import_table_entries[i].id = i;
+    }
+}

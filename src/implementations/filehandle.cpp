@@ -12,17 +12,25 @@ void FileHandle::set(std::string fname)
 {
     file_in_name = fname;
     file_in_psf_name = get_psf_name(fname);
-    file_out_upk_name = reext(get_base_name(fname), extensions.unpacked_file);
+
     std::string params[2] = {output_folder, get_base_name(fname)};
     folder_out_name = join(params, 2);
+
     std::string params2[2] = {folder_out_name, extra_folder_name};
     folder_out_extra_name = join(params2, 2);
+
+    file_out_upk_name = reext(get_base_name(fname), extensions.unpacked_file);
     params2[1] = file_out_upk_name;
     file_out_upk_name = join(params2, 2);
+
+    file_out_info_name = reext(get_base_name(fname), package_info_name + extensions.table_file);
+    params2[1] = file_out_info_name;
+    file_out_info_name = join(params2, 2);
 }
 
 void FileHandle::swap_upk()
 {
+    file_out_upk.flush();
     file_out_upk.close();
     file_in_upk.open(file_out_upk_name, std::ios::binary);
     if (!file_in_upk.good())
@@ -162,4 +170,54 @@ std::string FileHandle::make_folder_out_name(uint64_t pack_id, std::string pack_
     folder_name<<pack_id<<"_"<<pack_name;
 
     return folder_name.str();
+}
+
+void FileHandle::swap_table_name()
+{
+    file_out_table_name = reext(get_base_name(file_in_name), std::string(name_table_name) + extensions.table_file);
+    std::string params[2] = {
+        folder_out_name,
+        file_out_table_name
+    };
+    file_out_table_name = join(params, 2);
+}
+
+void FileHandle::swap_table_import()
+{
+    file_out_table_name = reext(get_base_name(file_in_name), std::string(import_table_name) + extensions.table_file);
+    std::string params[2] = {
+        folder_out_name,
+        file_out_table_name
+    };
+    file_out_table_name = join(params, 2);
+}
+
+void FileHandle::swap_table_export()
+{
+    file_out_table_name = reext(get_base_name(file_in_name), std::string(export_table_name) + extensions.table_file);
+    std::string params[2] = {
+        folder_out_name,
+        file_out_table_name
+    };
+    file_out_table_name = join(params, 2);
+}
+
+void FileHandle::swap_table_bulk()
+{
+    file_out_table_name = reext(get_base_name(file_in_name), std::string(bulks_table_name) + extensions.table_file);
+    std::string params[2] = {
+        folder_out_name,
+        file_out_table_name
+    };
+    file_out_table_name = join(params, 2);
+}
+
+void FileHandle::swap_table_additional()
+{
+    file_out_table_name = reext(get_base_name(file_in_name), std::string(additional_table_name) + extensions.table_file);
+    std::string params[2] = {
+        folder_out_name,
+        file_out_table_name
+    };
+    file_out_table_name = join(params, 2);
 }
