@@ -45,7 +45,8 @@ int main(int argv, const char* argc[])
     }
     catch (string error_string)
     {
-        cerr<<"Couldn't open file "<<argc[1]<<".";
+        cerr<<"Couldn't open file "<<file_in_name<<"."<<endl;
+        cerr<<error_string<<endl;
         return -1;
     }
     catch (...)
@@ -74,9 +75,6 @@ int main(int argv, const char* argc[])
         cout<<mk11_obj<<endl;
         cout<<endl;
 
-        /// Create UPK
-        mk11_obj.hFileObj->file_out_upk<<mk11_obj;
-
         try
         {
             if (mk11_obj.info.compression_flag == MK11File::compression_flags::OODLE)
@@ -101,7 +99,12 @@ int main(int argv, const char* argc[])
             return 1;
         }
 
-        _mkdir(mk11_obj.hFileObj->folder_out_name.c_str()); // Make Directory
+        _mkdir(mk11_obj.hFileObj->folder_out_name.c_str()); // Make Directory inside Output
+        mk11_obj.hFileObj->open_files_out(); // Open Output files
+
+        /// Create UPK
+        mk11_obj.hFileObj->file_out_upk<<mk11_obj;
+        
         for (uint32_t i = 0; i < mk11_obj.info.number_of_packages; i++)
         {
             cout<<mk11_obj.packages[i]<<endl;

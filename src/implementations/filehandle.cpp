@@ -21,6 +21,16 @@ void FileHandle::set(std::string fname)
     file_out_upk_name = join(params2, 2);
 }
 
+void FileHandle::swap_upk()
+{
+    file_out_upk.close();
+    file_in_upk.open(file_out_upk_name, std::ios::binary);
+    if (!file_in_upk.good())
+    {
+        throw std::string("Error Opening UPK file for reading.");
+    }
+}
+
 std::string FileHandle::join(std::string* names, uint64_t count)
 {
     std::string full_string = "";
@@ -126,14 +136,16 @@ void FileHandle::open_files()
         std::cerr<<"PSF File not present."<<std::endl;
     }
     file_in_psf>>std::noskipws;
+    
+}
 
+void FileHandle::open_files_out()
+{
     file_out_upk.open(file_out_upk_name, std::ios::binary);
     if (!file_out_upk)
     {
         throw std::string("Couldn't make output file " + file_out_upk_name);
     }
-
-    
 }
 
 std::string FileHandle::make_file_out_name(uint64_t seg_id, uint64_t chunk_id)

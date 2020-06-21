@@ -29,13 +29,16 @@ class FileHandle{
 
     std::ifstream file_in;
     std::ifstream file_in_psf;
+    std::ifstream file_in_upk;
     std::ofstream file_out_upk;
 
     FileHandle() {};
     FileHandle(std::string);
     void print();
     void open_files();
+    void open_files_out();
     void set(std::string);
+    void swap_upk();
     std::string get_psf_name(std::string);
     std::string get_base_dir(std::string);
     std::string get_base_name(std::string);

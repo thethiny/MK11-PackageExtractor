@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.bat
 
 # Folders
 .vscode/*
@@ -43,3 +44,5 @@ test.cpp
 !resources.txt
 *.log
 *.decompressed
+*.xxx
+*.upk

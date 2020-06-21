@@ -181,6 +181,8 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Zlib Decompression
   - [ ] Zlib Compression
   - [x] Convert XXX into UPK
+  - [ ] Replace automatic Compressed Segments count calculation with with other method relying on the sizes and max_limit
+  - [ ] Remove the seekg section in mk11file.cpp since it's not needed anymore (unverified)
 
 
 # How to build
