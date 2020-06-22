@@ -85,6 +85,8 @@ class ExportTableEntry: public TableEntry{
         } __attribute__((packed)) info;
         uint32_t id;
 
+        char* data;
+
         struct
         {
             std::string object_fullname;
@@ -101,6 +103,19 @@ class ExportTableEntry: public TableEntry{
             char* read_array = new char [sizeof(info)];
             fin.read(read_array, sizeof(info));
             memcpy(&info, read_array, sizeof(info));
+        }
+
+        void read_data(std::ifstream& fin)
+        {
+            data = new char [info.object_size];
+            fin.seekg(info.object_offset);
+            fin.read(data, info.object_size);
+        }
+
+        void delete_data()
+        {
+            delete [] data;
+            data = NULL;
         }
 
         std::string get_fullname()
@@ -154,6 +169,12 @@ class ExportTableEntry: public TableEntry{
 
             return cout;
         }
+
+        friend std::ofstream& operator<<(std::ofstream& fout, ExportTableEntry obj)
+        {
+            fout.write(obj.data, obj.info.object_size);
+            return fout;
+        }
             
 };
 
@@ -182,6 +203,15 @@ class ExportTable{
                 cout<<obj.entries[i]<<std::endl;
             }
             return cout;
+        }
+
+        friend std::ofstream& operator<<(std::ofstream& fout, ExportTable obj)
+        {
+            for (uint32_t i = 0; i < obj.entries_count; i++)
+            {
+                fout<<obj.entries[i];
+            }
+            return fout;
         }
         
 };

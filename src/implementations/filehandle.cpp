@@ -221,3 +221,17 @@ void FileHandle::swap_table_additional()
     };
     file_out_table_name = join(params, 2);
 }
+
+void FileHandle::mkdirs(std::string path)
+{
+    std::string cur_path("");
+    int i;
+    for (i = 0; i < path.length(); i++)
+    {
+        if (path[i] == '\\')
+        {
+            cur_path = path.substr(0, i+1);
+            _mkdir(cur_path.c_str());
+        }
+    }
+}

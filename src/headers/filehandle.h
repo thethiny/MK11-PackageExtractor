@@ -15,6 +15,7 @@ class FileHandle{
         std::string folder_out_extra_name;
         std::string output_folder = "output";
         std::string extra_folder_name = "PSFData";
+        std::string extracted_folder = "extracted";
         std::string package_info_name = ".info";
         std::string name_table_name = ".names_table";
         std::string export_table_name = ".exports_table";
@@ -58,6 +59,7 @@ class FileHandle{
     std::string make_file_out_name(uint64_t, uint64_t);
     std::string make_folder_out_name(uint64_t, std::string);
     std::string reext(std::string, std::string);
+    void mkdirs(std::string);
     void swap_table_name();
     void swap_table_import();
     void swap_table_export();

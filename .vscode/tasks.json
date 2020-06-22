@@ -7,7 +7,7 @@
 			"command": "mingw32-g++.exe",
 			"args": [
 				"-g",
-				"${workspaceFolder}/src/rewrite.cpp",
+				"${workspaceFolder}/src/extract.cpp",
 				"${workspaceFolder}/src/implementations/*.cpp",
 				"-o",
 				"MK11PackageExtractor.exe",
@@ -29,7 +29,7 @@
 			"command": "x86_64-w64-mingw32-g++.exe",
 			"args": [
 				"-g",
-				"${workspaceFolder}/src/rewrite.cpp",
+				"${workspaceFolder}/src/extract.cpp",
 				"${workspaceFolder}/src/implementations/*.cpp",
 				"-o",
 				"MK11PackageExtractor.exe",

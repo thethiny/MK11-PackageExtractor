@@ -275,6 +275,9 @@ int main(int argv, const char* argc[])
         cout<<mk11_obj.import_table;
         freopen("CONOUT$", "w", stdout);
 
+        // Extract Exports
+        mk11_obj.extract_exports();
+
     }
     catch (string error_string)
     {

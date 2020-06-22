@@ -169,9 +169,9 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Understanding the reason behind the 0x08 Padding before file internal name
 - HeaderData Package of XXX File
   - [x] Understanding
-  - [ ] Mapping Name/Import/Export Tables
+  - [x] Mapping Name/Import/Export Tables
 - Data
-  - [ ] Extraction
+  - [x] Extraction
   - [ ] Bulk Data Mapping
   - [ ] PSF Data Mapping
 - Tables
@@ -186,7 +186,7 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [x] Allow file input via cli
   - [x] Change file input to load by location not by folder "Files"
   - [ ] Generate info to enable repacking of files
-  - [ ] Extracted files should have proper names
+  - [x] Extracted files should have proper names
   - [x] Oodle Decompression
   - [x] Oodle Compression
   - [x] Zlib Decompression
@@ -197,6 +197,7 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Rely on decompressed size since compression is not always there
   - [ ] Change behavior of extraction so that it is based on Data Decompressed Offset instead of First Come First Extract
   - [x] Rename Extra Package to PSFData
+  - [ ] Make an Empty Compression Class so that when flag is 0 I can call it
 
 
 # How to build

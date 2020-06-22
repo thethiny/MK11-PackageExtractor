@@ -488,3 +488,24 @@ void MK11File::read_tables()
     resolve_object_pointers();
     resolve_object_paths();
 }
+
+void MK11File::extract_exports()
+{
+    for (uint32_t i = 0; i < export_table.entries_count; i++)
+    {
+        export_table.entries[i].read_data(hFileObj->file_in_upk);
+        std::string params[3] = {
+            hFileObj->folder_out_name,
+            hFileObj->extracted_folder,
+            export_table.entries[i].objects.object_fullpath
+        };
+        std::string full_path = hFileObj->join(params, 3); // Get Full Path String
+        std::cerr<<"Extracting: "<<full_path<<std::endl;
+        hFileObj->mkdirs(full_path); // Create Folders
+        std::ofstream fout(full_path.c_str(), std::ios::binary);
+        fout<<export_table.entries[i];
+        fout.flush();
+        fout.close();
+        export_table.entries[i].delete_data();
+    }
+}

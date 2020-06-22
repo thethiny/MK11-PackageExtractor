@@ -153,6 +153,7 @@ class MK11File{
         void resolve_object_pointers();
         void resolve_object_names();
         void resolve_object_paths();
+        void extract_exports();
         friend std::ostream& operator<<(std::ostream&, MK11File);
         friend std::ofstream& operator<<(std::ofstream&, MK11File);
 
