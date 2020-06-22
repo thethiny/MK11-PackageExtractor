@@ -174,6 +174,13 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Extraction
   - [ ] Bulk Data Mapping
   - [ ] PSF Data Mapping
+- Tables
+  - [x] Understanding Name Table
+  - [x] Name Table Mapping
+  - [ ] Understanding Export Table
+  - [x] Export Table Mapping
+  - [x] Understanding Import Table
+  - [x] Import Table Mapping
 - Extra
   - [x] Add flag to skip PSF
   - [x] Allow file input via cli
@@ -186,10 +193,10 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [ ] Zlib Compression
   - [x] Convert XXX into UPK
   - [ ] Replace automatic Compressed Segments count calculation with with other method relying on the sizes and max_limit
-  - [ ] Remove the seekg section in mk11file.cpp since it's not needed anymore (unverified)
+  - [x] Remove the seekg section in mk11file.cpp since it's not needed anymore (untested)
   - [ ] Rely on decompressed size since compression is not always there
   - [ ] Change behavior of extraction so that it is based on Data Decompressed Offset instead of First Come First Extract
-  - [ ] Rename Extra Package to PSFData
+  - [x] Rename Extra Package to PSFData
 
 
 # How to build
