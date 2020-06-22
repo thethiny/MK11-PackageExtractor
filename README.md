@@ -170,6 +170,10 @@ After all segments done, repeat from [Segments](#segments) until file is done.
 - HeaderData Package of XXX File
   - [x] Understanding
   - [ ] Mapping Name/Import/Export Tables
+- Data
+  - [ ] Extraction
+  - [ ] Bulk Data Mapping
+  - [ ] PSF Data Mapping
 - Extra
   - [x] Add flag to skip PSF
   - [x] Allow file input via cli

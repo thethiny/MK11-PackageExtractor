@@ -245,40 +245,34 @@ int main(int argv, const char* argc[])
         /// Start Reading UPK Here
         mk11_obj.hFileObj->swap_upk();
 
+        // Read Tables
+        mk11_obj.read_tables();
+
         // Read Name Table
         cout<<"Name Table:"<<endl;
-        mk11_obj.read_name_table();
+        // mk11_obj.read_name_table();
 
         mk11_obj.hFileObj->swap_table_name();
         freopen(mk11_obj.hFileObj->file_out_table_name.c_str(), "w+", stdout);
-        for (uint32_t i = 0; i < mk11_obj.info.name_table_entries_count; i++)
-        {
-            cout<<mk11_obj.name_table_entries[i]<<endl;
-        }
+        cout<<mk11_obj.name_table;
         freopen("CONOUT$", "w", stdout);
 
         // Read Export Table
         cout<<"Export Table:"<<endl;
-        mk11_obj.read_export_table();
+        // mk11_obj.read_export_table();
         
         mk11_obj.hFileObj->swap_table_export();
         freopen(mk11_obj.hFileObj->file_out_table_name.c_str(), "w+", stdout);
-        for (uint32_t i = 0; i < mk11_obj.info.export_table_entries_count; i++)
-        {
-            cout<<mk11_obj.export_table_entries[i]<<endl;
-        }
+        cout<<mk11_obj.export_table;
         freopen("CONOUT$", "w", stdout);
 
         // Read Import Table
         cout<<"Import Table: "<<endl;
-        mk11_obj.read_import_table();
+        // mk11_obj.read_import_table();
 
         mk11_obj.hFileObj->swap_table_import();
         freopen(mk11_obj.hFileObj->file_out_table_name.c_str(), "w+", stdout);
-        for (uint32_t i = 0 ; i < mk11_obj.info.import_table_entries_count; i++)
-        {
-            cout<<mk11_obj.import_table_entries[i]<<endl;
-        }
+        cout<<mk11_obj.import_table;
         freopen("CONOUT$", "w", stdout);
 
     }

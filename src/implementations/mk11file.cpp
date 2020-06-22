@@ -74,7 +74,7 @@ void MK11File::read_extra_tables(std::ifstream& fin)
         bulk_tables[i].id = i;
     }
 
-    fin.seekg(packages[0].subpackages[0].info.st_offset); // Go to first entry
+    //fin.seekg(packages[0].subpackages[0].info.st_offset); // Go to first entry
 
 }
 
@@ -359,36 +359,132 @@ std::ostream &operator<<(std::ostream& cout, MK11File obj)
 
 void MK11File::read_name_table()
 {
-    name_table_entries = new NameTableEntry [info.name_table_entries_count];
-    hFileObj->file_in_upk.seekg(info.decompressed_header_location);
-
-    for (uint32_t i = 0; i < info.name_table_entries_count; i++)
-    {
-        name_table_entries[i].read(hFileObj->file_in_upk);
-        name_table_entries[i].id = i;
-    }
+    name_table.location = info.decompressed_header_location;
+    name_table.entries_count = info.name_table_entries_count;
+    name_table.read(hFileObj->file_in_upk);
 }
 
 void MK11File::read_export_table()
 {
-    export_table_entries = new ExportTableEntry [info.export_table_entries_count];
-    hFileObj->file_in_upk.seekg(info.decompressed_export_table_location);
-
-    for (uint32_t i = 0; i < info.export_table_entries_count; i++)
-    {
-        export_table_entries[i].read(hFileObj->file_in_upk);
-        export_table_entries[i].id = i;
-    }
+    export_table.location = info.decompressed_export_table_location;
+    export_table.entries_count = info.export_table_entries_count;
+    export_table.read(hFileObj->file_in_upk);
 }
 
 void MK11File::read_import_table()
 {
-    import_table_entries = new ImportTableEntry [info.import_table_entries_count];
-    hFileObj->file_in_upk.seekg(info.decompressed_import_table_location);
+    import_table.location = info.decompressed_import_table_location;
+    import_table.entries_count = info.import_table_entries_count;
+    import_table.read(hFileObj->file_in_upk);
+}
+
+void MK11File::get_object_class(TableEntry* &entry, int32_t value)
+{
+    if (value < 0)
+    {
+        value = (-value)-1;
+        entry = &(import_table.entries[value]);
+    }
+    else if (value > 0)
+    {
+        value -= 1;
+        entry = &(export_table.entries[value]);
+    }
+    else
+    {
+        entry = NULL;
+    }
+
+}
+
+std::string MK11File::get_object_name(uint32_t name_index, uint32_t name_suffix)
+{
+    std::stringstream name;
+    name<<name_table.entries[name_index].name;
+    if (name_suffix)
+        name<<"_"<<name_suffix-1;
     
+    return name.str();
+
+}
+
+void MK11File::resolve_object_names()
+{
+    for (uint32_t i = 0; i < info.export_table_entries_count; i++)
+    {
+        export_table.entries[i].objects.object_fullname = get_object_name(export_table.entries[i].info.object_name, export_table.entries[i].info.object_name_suffix);
+        export_table.entries[i].objects.object_mainpackage = get_object_name(export_table.entries[i].info.object_main_package, export_table.entries[i].info.unk1);
+    }
+
     for (uint32_t i = 0; i < info.import_table_entries_count; i++)
     {
-        import_table_entries[i].read(hFileObj->file_in_upk);
-        import_table_entries[i].id = i;
+        import_table.entries[i].objects.object_name = get_object_name(import_table.entries[i].info.object_name,0); 
+        import_table.entries[i].objects.object_class_package_name = get_object_name(import_table.entries[i].info.object_class_package, 0);
+        import_table.entries[i].objects.object_class_full_name = get_object_name(import_table.entries[i].info.object_class_name, import_table.entries[i].info.object_class_name_suffix);
     }
+}
+
+void MK11File::resolve_object_pointers()
+{
+    for (uint32_t i = 0; i < info.export_table_entries_count; i++)
+    {
+        get_object_class(export_table.entries[i].objects.object_class_ptr, export_table.entries[i].info.object_class);
+        get_object_class(export_table.entries[i].objects.object_outer_ptr, export_table.entries[i].info.object_outer_class);
+        get_object_class(export_table.entries[i].objects.object_super_ptr, export_table.entries[i].info.object_super_class);
+    }
+    for (uint32_t i = 0; i < info.import_table_entries_count; i++)
+    {
+        get_object_class(import_table.entries[i].objects.object_outer_ptr, import_table.entries[i].info.object_outer_package);
+    }
+}
+
+void MK11File::resolve_object_paths()
+{
+    std::string params[2];
+    for (uint32_t i = 0; i < info.export_table_entries_count; i++)
+    {
+        std::string name = export_table.entries[i].get_fullname();
+        if (export_table.entries[i].objects.object_class_ptr)
+            name += "." + export_table.entries[i].objects.object_class_ptr->get_fullname();
+
+        TableEntry* entry;
+        entry = export_table.entries[i].get_outer();
+        while(entry)
+        {
+            params[0] = entry->get_fullname();
+            params[1] = name;
+            name = hFileObj->join(params, 2);
+            entry = entry->get_outer();
+        }
+        
+        export_table.entries[i].objects.object_fullpath = name;
+    }
+
+    for (uint32_t i = 0; i < info.import_table_entries_count; i++)
+    {
+        std::string name = import_table.entries[i].objects.object_name;
+        name += "." + import_table.entries[i].get_fullname();
+
+        TableEntry* entry;
+        entry = import_table.entries[i].get_outer();
+        while(entry)
+        {
+            params[0] = entry->get_fullname();
+            params[1] = name;
+            name = hFileObj->join(params, 2);
+            entry = entry->get_outer();
+        }
+        
+        import_table.entries[i].objects.object_fullpath = name;
+    }
+}
+
+void MK11File::read_tables()
+{
+    read_name_table();
+    read_export_table();
+    read_import_table();
+    resolve_object_names();
+    resolve_object_pointers();
+    resolve_object_paths();
 }
