@@ -6,8 +6,7 @@
 class SegmentInfo{
     public:
         struct Info{
-            uint32_t magic;
-            uint32_t unk;
+            uint64_t magic;
             uint64_t max_seg_dec_size;
             uint64_t segment_compressed_size;
             uint64_t segment_decompressed_size;

@@ -50,6 +50,49 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		}
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: texture.cpp",
+			"command": "x86_64-w64-mingw32-g++.exe",
+			"args": [
+				"-g",
+				"${workspaceFolder}/src/texture.cpp",
+				"-o",
+				"texture_tool.exe",
+				"-std=c++11",
+				"-I",
+				"${workspaceFolder}/src/headers"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"type": "shell",
+			"label": "C/C++: repack_textures.cpp",
+			"command": "x86_64-w64-mingw32-g++.exe",
+			"args": [
+				"-g",
+				"${workspaceFolder}/src/repack_textures.cpp",
+				"${workspaceFolder}/src/implementations/*.cpp",
+				"-o",
+				"repack_tool.exe",
+				"-std=c++11",
+				"-I",
+				"${workspaceFolder}/src/headers"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
 	]
 }
