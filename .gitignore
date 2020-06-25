@@ -47,6 +47,6 @@ test.cpp
 *.xxx
 *.upk
 
-#Beta
-repack_textures.cpp
-texture.cpp
+# Beta
+# repack_textures.cpp
+# texture.cpp
