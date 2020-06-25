@@ -46,3 +46,7 @@ test.cpp
 *.decompressed
 *.xxx
 *.upk
+
+#Beta
+repack_textures.cpp
+texture.cpp

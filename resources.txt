@@ -4,3 +4,4 @@ https://www.gildor.org/smf/index.php?topic=882.0
 https://www.gildor.org/smf/index.php/topic,297.0.html
 http://www.scribd.com/doc/54572848/UT-Package-File-Format
 https://wiki.nexusmods.com/index.php/UPK_File_Format_-_XCOM:EU_2012
+https://stackoverflow.com/questions/9050260/what-does-a-zlib-header-look-like/43170354#43170354
