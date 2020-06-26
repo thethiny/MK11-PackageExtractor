@@ -46,6 +46,9 @@ test.cpp
 *.decompressed
 *.xxx
 *.upk
+PSFHeaderData
+PSFTableData
+*.PSF
 
 # Beta
 # repack_textures.cpp

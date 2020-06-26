@@ -13,6 +13,7 @@
 #include "subpackage.h"
 #include "segment_info.h"
 #include "compressedsegment.h"
+#include "filehandle.h"
 
 using namespace std;
 
@@ -51,10 +52,19 @@ uint64_t get_number_of_textures(string path)
     return ctr;
 }
 
-int main()
+int main(int argv, const char* argc[])
 {
+    if (argv < 2)
+    {
+        cerr<<"Invalid Usage";
+        return -1;
+    }
+
     MK11File mk11_file;
-    string path = "output\\GEARASSETS_KIT_ScriptAssets\\PSFData\\";
+    FileHandle filehandle;
+    filehandle.set(argc[1]);
+    mk11_file.register_file(filehandle);
+
     string folders[2] = {
         "0_Mesh",
         "1_Texture"
@@ -63,6 +73,16 @@ int main()
     uint64_t max_dec_size = 0x20000;
     uint64_t magic = 0x9E2A83C1;
     ofstream fout("out.PSF", ios::binary);
+    ofstream tabledata("PSFTableData", ios::binary);
+
+    string table_in_name;
+    string params[2] = {
+        mk11_file.hFileObj->folder_out_extra_name,
+        "PSFTable.bin"
+    };
+    table_in_name = mk11_file.hFileObj->join(params, 2);
+    ifstream table_in(table_in_name.c_str(), ios::binary);
+    table_in>>noskipws;
 
     uint32_t folders_count = 2;
 
@@ -81,7 +101,7 @@ int main()
         string folder_name = get_folder_name(folders[i]);
         uint32_t folder_name_len = folder_name.length() +1;
         stringstream folder;
-        folder<<path<<folders[i]<<"\\";
+        folder<<mk11_file.hFileObj->folder_out_extra_name<<"\\"<<folders[i]<<"\\";
         ///
         uint64_t files_count = get_number_of_textures(folder.str());
         mk11_file.packages_extra[i].name_len = folder_name_len;
@@ -108,6 +128,7 @@ int main()
 
         ///
         uint64_t file_idx = 0;
+        uint64_t next_table = 0;
         stringstream file;
         file<<folder.str()<<file_idx<<".decompressed";
         ifstream fin(file.str().c_str(), ios::binary);
@@ -120,6 +141,31 @@ int main()
             uint64_t file_size = fin.tellg();
             cout<<"Operating on "<<file_size<<" bytes."<<endl;
             cout<<"File "<<file_idx<<"/"<<files_count<<endl;
+
+            /// PSF Table Stuff
+            if (file_idx == next_table)
+            {
+                char read_array[8];
+                uint64_t entry_id;
+                uint32_t entries_count;
+                uint32_t name_len;
+                table_in.read(read_array, 8);
+                memcpy(&entry_id, read_array, 8);
+                table_in.read(read_array, 4);
+                memcpy(&entries_count, read_array, 4);
+                table_in.read(read_array, 4);
+                memcpy(&name_len, read_array, 4);
+                char* name = new char [name_len];
+                table_in.read(name, name_len);
+                next_table += entries_count;
+                tabledata.write((char*)&entry_id, 8);
+                tabledata.write((char*)&name_len, 4);
+                tabledata.write(name, name_len);
+                tabledata.write((char*)&entries_count, 4);
+
+            }
+
+
             fin.seekg(0, ios::beg);
             uint64_t segments = 0;
             while (true and file_size) //if size 0 then no need
@@ -202,6 +248,18 @@ int main()
             file<<folder.str()<<file_idx<<".decompressed";
             fin.open(file.str().c_str(), ios::binary);
             fin>>noskipws;
+
+            ///PSF Table Stuff Again
+            tabledata.write((char*)&file_size, 8);
+            tabledata.write((char*)&mk11_file.packages_extra[i].subpackages[file_idx-1].info.seg_size, 8);
+            uint64_t table_data_offset = total_compressed_offset - mk11_file.packages_extra[i].subpackages[file_idx-1].info.seg_size;
+            tabledata.write((char*)&table_data_offset, 8);
+            tabledata.write((char*)&table_data_offset, 8);
+            if (file_idx == next_table)
+            {
+                uint32_t c_flag = 0x100;
+                tabledata.write((char*)&c_flag, 4);
+            }
         }
 
     }

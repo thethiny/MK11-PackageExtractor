@@ -26,8 +26,7 @@ void ExtraTable::read(std::ifstream &fin)
 std::ostream& operator<<(std::ostream& cout, ExtraTable obj)
 {
     cout<<"\tTable #"<<obj.id<<std::endl;
-    cout<<"\t\tUnk1: "<<obj.header.unk1<<std::endl;
-    cout<<"\t\tUnk2: "<<obj.header.unk2<<std::endl;
+    cout<<"\t\tEntry ID: "<<obj.header.entry_id<<std::endl;
     cout<<"\t\tName: "<<obj.name<<std::endl;
     cout<<"\t\tNumber of Table Entries: "<<obj.entries_count<<std::endl;
     for (uint32_t i = 0; i < obj.entries_count; i++)

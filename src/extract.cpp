@@ -227,8 +227,32 @@ int main(int argv, const char* argc[])
             {
                 cout<<mk11_obj.psf_tables[i]<<endl;
             }
+
+            /// Write Packages Table to external file for repackaging support. Very initial, relies on index matching, not for release. Should swap with proper file name matching.
+            ofstream psf_table_out;
+            string params[4] = {
+                mk11_obj.hFileObj->output_folder,
+                mk11_obj.hFileObj->get_base_name(mk11_obj.hFileObj->file_in_name),
+                mk11_obj.hFileObj->extra_folder_name,
+                "PSFTable.bin"
+            };
+            string psf_table_file_name = mk11_obj.hFileObj->join(params, 4);
+            cerr<<"THE PSF TABLE FILE: "<<psf_table_file_name<<endl;
+            psf_table_out.open(psf_table_file_name.c_str(), ios::binary);
+            for (uint32_t i = 0; i < mk11_obj.number_of_extra_packages_tables; i++)
+            {
+                psf_table_out.write((char*)&mk11_obj.psf_tables[i].header.entry_id, 8);
+                psf_table_out.write((char*)&mk11_obj.psf_tables[i].entries_count, 4);
+                psf_table_out.write((char*)&mk11_obj.psf_tables[i].header.name_len, 4);
+                psf_table_out.write(mk11_obj.psf_tables[i].name, mk11_obj.psf_tables[i].header.name_len);
+            }
+            psf_table_out.close();
+
+
         }
         freopen("CONOUT$", "w", stdout);
+
+
         
         if (mk11_obj.number_of_bulk_packages_tables)
         {

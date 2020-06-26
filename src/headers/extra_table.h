@@ -6,8 +6,7 @@
 class ExtraTable{
     public:
         struct {
-            uint32_t unk1;
-            uint32_t unk2;
+            uint64_t entry_id;
             uint32_t name_len;
         } __attribute__((packed)) header;
         char* name;
