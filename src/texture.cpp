@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    string path = "output\\GEARASSETS_KIT_ScriptAssets\\PSFData\\1_Texture";
+    string path = "output\\GEARASSETS_FUJ_ScriptAssets\\PSFData\\1_Texture";
     uint64_t i = 0;
     stringstream file;
     file<<path<<"\\"<<i<<".decompressed";

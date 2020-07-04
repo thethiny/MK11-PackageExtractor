@@ -5,6 +5,7 @@
 #include <cmath>
 #include <direct.h>
 #include <windows.h>
+#include <direct.h>
 
 #include "compression.h"
 #include "oodle.h"
@@ -62,8 +63,29 @@ int main(int argv, const char* argc[])
 
     MK11File mk11_file;
     FileHandle filehandle;
-    filehandle.set(argc[1]);
+    const char* file_in_name = argc[1];
+    filehandle.set(file_in_name);
     mk11_file.register_file(filehandle);
+
+    string repack_folder_name = "repack";
+    mkdir(repack_folder_name.c_str());
+    string file_base_name = mk11_file.hFileObj->get_base_name(file_in_name);
+    string out_psf_name = file_base_name + ".PSF";
+    string out_psftable_name = file_base_name + ".PSFTable";
+    string out_headertable_name = file_base_name + ".PSFHeader";
+    ///Scope
+    {
+        string params[2] = {
+            repack_folder_name,
+            out_psf_name
+        };
+        out_psf_name = mk11_file.hFileObj->join(params, 2);
+        params[1] = out_psftable_name;
+        out_psftable_name = mk11_file.hFileObj->join(params, 2);
+        params[1] = out_headertable_name;
+        out_headertable_name = mk11_file.hFileObj->join(params, 2);
+    }
+
 
     string folders[2] = {
         "0_Mesh",
@@ -72,15 +94,19 @@ int main(int argv, const char* argc[])
     Compression* compression_obj = new Oodle("..\\..\\Binaries\\Retail\\oo2core_5_win64.dll");
     uint64_t max_dec_size = 0x20000;
     uint64_t magic = 0x9E2A83C1;
-    ofstream fout("out.PSF", ios::binary);
-    ofstream tabledata("PSFTableData", ios::binary);
+    ofstream fout(out_psf_name.c_str(), ios::binary);
+    ofstream tabledata(out_psftable_name.c_str(), ios::binary);
 
+    // Scope
     string table_in_name;
-    string params[2] = {
+    {
+        string params[2] = {
         mk11_file.hFileObj->folder_out_extra_name,
         "PSFTable.bin"
-    };
-    table_in_name = mk11_file.hFileObj->join(params, 2);
+        };
+        table_in_name = mk11_file.hFileObj->join(params, 2);
+    }
+    
     ifstream table_in(table_in_name.c_str(), ios::binary);
     table_in>>noskipws;
 
@@ -118,15 +144,6 @@ int main(int argv, const char* argc[])
         mk11_file.packages_extra[i].info.segment_size = 0;
         mk11_file.packages_extra[i].info.number_of_subpackages = files_count;
         
-        // if (i) // My Data is the previous one's data
-        // {
-        //     mk11_file.packages_extra[i].info.decompressed_offset = mk11_file.packages_extra[i-1].info.decompressed_offset;
-        //     mk11_file.packages_extra[i].info.decompressed_offset += mk11_file.packages_extra[i-1].info.decompressed_size;
-        //     mk11_file.packages_extra[i].info.start_offset = mk11_file.packages_extra[i-1].info.start_offset;
-        //     mk11_file.packages_extra[i].info.start_offset += mk11_file.packages_extra[i-1].info.segment_size;            
-        // }
-
-        ///
         uint64_t file_idx = 0;
         uint64_t next_table = 0;
         stringstream file;
@@ -264,9 +281,8 @@ int main(int argv, const char* argc[])
 
     }
 
-    /// Please Free DLL here
     /// Write HeaderData Sections
-    ofstream headerdata("PSFHeaderData", ios::binary);
+    ofstream headerdata(out_headertable_name.c_str(), ios::binary);
     headerdata.write((char*)&mk11_file.number_of_extra_packages, 4);
     for (uint32_t i = 0; i < mk11_file.number_of_extra_packages; i++)
     {
