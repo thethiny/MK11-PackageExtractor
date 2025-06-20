@@ -105,6 +105,7 @@ Repeat for `Entries Count`
 If Compression Flag is 0, Compressed Size/Offset is -1.
 If Compression Flag is not 0 but the data is in a separate file (example, PSF file), then Decompressed/Compressed Offset are the same.
 The point of Decompressed/Compressed offsets are the location within the upk file, since the PSF file doesn't have to be converted to UPK, then the UPK offset is similar to the PSF offset.
+2025 Update: Compression == Decompression offsets -> PSF, since the game will not look for it internally. Compression Size == Offset -> UPK (after decompressing into midway).
 
 
 
@@ -166,18 +167,18 @@ After all segments done, repeat from [Segments](#segments) until file is done.
   - [X] Reading Bulk Table
   - [X] Understanding Bulk Table
   - [ ] Understanding the reason behind the 0x18 padding
-  - [ ] Understanding the reason behind the 0x08 Padding before file internal name
+  - [X] Understanding the reason behind the 0x08 Padding before file internal name || Not Padding, it's Bulk/PSF Tables
 - HeaderData Package of XXX File
   - [x] Understanding
   - [x] Mapping Name/Import/Export Tables
 - Data
   - [x] Extraction
-  - [ ] Bulk Data Mapping
-  - [ ] PSF Data Mapping
+  - [X] Bulk Data Mapping -> Bulk Mapping Key
+  - [X] PSF Data Mapping -> PSF Mapping Key // These 2 are used to map a specific export to the bulk/psf by ID
 - Tables
   - [x] Understanding Name Table
   - [x] Name Table Mapping
-  - [ ] Understanding Export Table
+  - [X] Understanding Export Table
   - [x] Export Table Mapping
   - [x] Understanding Import Table
   - [x] Import Table Mapping
